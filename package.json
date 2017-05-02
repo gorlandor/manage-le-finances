@@ -1,0 +1,62 @@
+{
+  "name": "manage-le-finances",
+  "version": "1.0.0",
+  "description": "A simple web application to help manage your finances better. Built with React, hosted and powered by Firebase.",
+  "main": "src/app.entry.js",
+  "scripts": {
+    "start": "npm run dev && npm run serve",
+    "dev": "webpack --colors",
+    "serve": "firebase serve",
+    "build": "set \"NODE_ENV=production\" && webpack -p --colors",
+    "prod": "npm run build && firebase deploy"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/giovanni0918/manage-le-finances.git"
+  },
+  "keywords": [
+    "react",
+    "firebase",
+    "finances",
+    "manage-le-finances",
+    "giovanni0918",
+    "giovanniorlando"
+  ],
+  "author": "Giovanni Orlando Rivera <gorlandor@gmail.com>",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/giovanni0918/manage-le-finances/issues"
+  },
+  "homepage": "https://github.com/giovanni0918/manage-le-finances#readme",
+  "dependencies": {
+    "babel-polyfill": "^6.23.0",
+    "compression": "^1.6.2",
+    "express": "^4.15.2",
+    "firebase": "^3.9.0",
+    "prop-types": "^15.5.8",
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4",
+    "react-router-dom": "^4.1.1",
+    "sw-toolbox": "^3.6.0"
+  },
+  "devDependencies": {
+    "babel-core": "^6.24.1",
+    "babel-loader": "^7.0.0",
+    "babel-plugin-syntax-async-functions": "^6.13.0",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-react-constant-elements": "^6.23.0",
+    "babel-plugin-transform-react-inline-elements": "^6.22.0",
+    "babel-plugin-transform-regenerator": "^6.24.1",
+    "babel-preset-env": "^1.4.0",
+    "babel-preset-react": "^6.24.1",
+    "css-loader": "^0.28.1",
+    "file-loader": "^0.11.1",
+    "html-loader": "^0.4.5",
+    "json-loader": "^0.5.4",
+    "node-sass": "^4.5.2",
+    "sass-loader": "^6.0.3",
+    "style-loader": "^0.17.0",
+    "url-loader": "^0.5.8",
+    "webpack": "^2.4.1"
+  }
+}
