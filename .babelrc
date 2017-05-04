@@ -1,0 +1,13 @@
+{
+  "presets": [
+    "env",
+    "react"
+  ],
+  "plugins": [
+    "transform-react-constant-elements",
+    "transform-react-inline-elements",
+    "syntax-async-functions",
+    "transform-regenerator",
+    "transform-async-to-generator"
+  ]
+}

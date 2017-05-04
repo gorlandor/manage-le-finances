@@ -1,0 +1,30 @@
+.table {
+  width: 100%;
+  max-width: 992px;
+  margin: 0 auto;
+  padding: 2rem 0;
+  text-align: left;
+  font-size: 0.875rem;
+  &__header {
+    th {
+      color: var(--primary-color);
+      text-align: center;
+    }
+  }
+  &__body {
+    tr {
+      td {
+        color: black;
+        font-size: 0.750rem;
+        text-align: center;
+      }
+    }
+  }
+  &__footer {
+    tr {
+      td {
+        color: var(--primary-color);
+      }
+    }
+  }
+}

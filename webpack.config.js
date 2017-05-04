@@ -32,15 +32,7 @@ module.exports = {
                 test: /\.js$/,
                 exclude: /(node_modules|bower_components)/,
                 use: {
-                    loader: 'babel-loader',
-                    options: {
-                        presets: ['env'],
-                        plugins: [
-                            "syntax-async-functions",
-                            "transform-regenerator",
-                            "transform-async-to-generator"
-                        ]
-                    }
+                    loader: 'babel-loader'
                 }
             },
             {

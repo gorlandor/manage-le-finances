@@ -5,9 +5,9 @@
   "main": "src/app.entry.js",
   "scripts": {
     "start": "npm run dev && npm run serve",
-    "dev": "webpack --colors",
+    "dev": "webpack --profile --colors",
     "serve": "firebase serve",
-    "build": "set \"NODE_ENV=production\" && webpack -p --colors",
+    "build": "set \"NODE_ENV=production\" && webpack -p --profile --colors",
     "prod": "npm run build && firebase deploy"
   },
   "repository": {
@@ -35,6 +35,7 @@
     "firebase": "^3.9.0",
     "prop-types": "^15.5.8",
     "react": "^15.5.4",
+    "react-cookie": "^2.0.6",
     "react-dom": "^15.5.4",
     "react-router-dom": "^4.1.1",
     "sw-toolbox": "^3.6.0"
