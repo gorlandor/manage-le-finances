@@ -2,13 +2,13 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { expensesRef, userRef, userExpensesRef } from '../firebase.config';
 import Excel from './Excel';
-import TodoForm from './TodoForm';
+import ExpenseForm from './ExpenseForm';
 
 class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      'headers': ['Amount', 'DueDate', 'Name', 'Recurrent?', 'SharedWith'],
+      'headers': ['Amount', 'DueDate', 'Name', 'Recurrence', 'SharedWith'],
       'data': []
     };
   }
@@ -42,9 +42,10 @@ class List extends Component {
     return (
       <div className='list-wrapper'>
         <Excel headers={this.state.headers} data={this.state.data} />
-        <TodoForm />
+        <ExpenseForm />
       </div>
     );
   }
 }
+
 export default List;

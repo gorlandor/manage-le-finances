@@ -22,8 +22,7 @@ class App extends Component {
     this.setState({
       'signedIn': signedIn,
       'email': email
-    });
-    console.info('App state @_notifyLogin: ', this.state);
+    });    
   }
   render() {
     if (this.state.signedIn) {

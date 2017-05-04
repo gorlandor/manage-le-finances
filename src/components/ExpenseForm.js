@@ -1,18 +1,21 @@
 import React, { Component } from 'react';
 import * as firebaseConfig from '../firebase.config';
 
-class TodoForm extends Component {
+class ExpenseForm extends Component {
   constructor(props) {
     super(props);
-    this.state = {
+    this.state = Object.assign({}, this.initialState);
+    this._onSubmit = this._onSubmit.bind(this);
+  }
+  get initialState() {
+    return {
       'amount': 0,
       'due_date': '',
-      'is_recurrent': false,
       'expense_title': '',
-      'shared_with': '',
+      'recurrence': 'once',
+      'shared_with': 'myself',
       'loading': false
-    };
-    this._onSubmit = this._onSubmit.bind(this);
+    }
   }
   _onSubmit(event) {
     event.preventDefault();
@@ -21,25 +24,15 @@ class TodoForm extends Component {
       .push({
         'amount': this.state.amount,
         'due_date': this.state.due_date,
-        'is_recurrent': this.state.is_recurrent,
         'expense_title': this.state.expense_title,
+        'recurrence': this.state.recurrence,
         'shared_with': this.state.shared_with
       })
       .then(() => {
-        this.setState({
-          'amount': 0,
-          'due_date': '',
-          'is_recurrent': false,
-          'expense_title': '',
-          'shared_with': '',
-          'loading': false
-        });
+        this.setState(this.initialState);
       })
       .catch((err) => {
         console.warn({ err });
-      })
-      .then(() => {
-        this.setState({ loading: false });
       });
   }
   render() {
@@ -54,8 +47,8 @@ class TodoForm extends Component {
             name="expense_title"
             placeholder="Expense Title"
             onChange={(event) => this.setState({ 'expense_title': event.target.value })}
-            required />
-          <br />
+            required
+            value={this.state.expense_title} />
         </label>
         <label className="form-label flex-vertically">
           Amount
@@ -67,8 +60,8 @@ class TodoForm extends Component {
             name="amount"
             placeholder="Amount"
             onChange={(event) => this.setState({ 'amount': event.target.value })}
-            required />
-          <br />
+            required
+            value={this.state.amount} />
         </label>
         <label className="form-label flex-vertically">
           Due Date
@@ -79,8 +72,8 @@ class TodoForm extends Component {
             name="due_date"
             placeholder="Due Date"
             onChange={(event) => this.setState({ 'due_date': event.target.value })}
-            required />
-          <br />
+            required
+            value={this.state.due_date} />
         </label>
         <label className="form-label flex-vertically">
           Shared with?
@@ -91,18 +84,23 @@ class TodoForm extends Component {
             name="shared_with"
             placeholder="Shared with..."
             onChange={(event) => this.setState({ 'shared_with': event.target.value })}
-            required />
-          <br />
+            required
+            value={this.state.shared_with} />
         </label>
         <label className="form-label flex-vertically">
-          Recurrent?
-          <input
+          Recurrence
+          <select
             className="form-control"
-            type="checkbox"
-            id="is_recurrent"
-            name="is_recurrent"
-            onChange={(event) => this.setState({ 'is_recurrent': !this.state.is_recurrent })} />
-          <br />
+            name="recurrence"
+            id="recurrence"
+            onChange={(event) => this.setState({ 'recurrence': event.target.value })}
+            value={this.state.recurrence}>
+            <option value="once" selected>once</option>
+            <option value="daily">daily</option>
+            <option value="weekly">weekly</option>
+            <option value="monthly">monthly</option>
+            <option value="yearly">yearly</option>
+          </select>
         </label>
         {this.state.loading
           ? <button className="btn login-btn" disabled>Submit</button>
@@ -112,4 +110,4 @@ class TodoForm extends Component {
   }
 }
 
-export default TodoForm;
+export default ExpenseForm;
