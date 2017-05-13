@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom';
 import List from './List';
 import Login from './Login';
 
@@ -17,12 +18,11 @@ class App extends Component {
     console.info('App state @componentDidUpdate: ', this.state);
   }
   render() {
-    if (this.state.signedIn) {
-      return <List />;
-    }
-    else {
-      return <Login />;
-    }
+    return this.state.signedIn ? (
+      <List />
+    ) : (
+        <Redirect to="/login" />
+      );
   }
 }
 

@@ -32,13 +32,13 @@ class Login extends Component {
 
     firebaseConfig.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
-        this.setState({
-          'signedIn': true
-        });
         localStorage.setItem('authState', JSON.stringify({
           'email': this.state.email,
-          'signedIn': this.state.signedIn
+          'signedIn': true
         }));
+        this.setState({
+          'signedIn': true
+        });        
       })
       .catch((error) => {
         // Handle Errors here.
@@ -48,7 +48,10 @@ class Login extends Component {
   }
   render() {
     return this.state.signedIn ? (
-      <Redirect to="/" />
+      <Redirect to={{
+        'pathname': '/',
+        'state': { 'email': this.state.email, 'signedIn': this.state.signedIn }
+      }} />
     ) : (
         <form className="login-form flex-vertically" autoComplete="off" onSubmit={this._login}>
           <label className="form-label flex-vertically">

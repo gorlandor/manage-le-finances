@@ -1,0 +1,9 @@
+{
+  "name": "Manage le Finances",
+  "short_name": "Manage le Finances",
+  "theme_color": "#673ab7",
+  "background_color": "#673ab7",
+  "display": "standalone",
+  "scope": "/",
+  "start_url": "/"
+}

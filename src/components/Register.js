@@ -32,13 +32,13 @@ class Register extends Component {
     firebaseConfig.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
         // Handle Success here.
-        this.setState({
-          'registered': true
-        });
         localStorage.setItem('authState', JSON.stringify({
           'email': this.state.email,
-          'signedIn': this.state.registered
+          'signedIn': true
         }));
+        this.setState({
+          'registered': true
+        });        
       })
       .catch((error) => {
         // Handle Errors here.
