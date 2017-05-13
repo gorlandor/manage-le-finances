@@ -11,7 +11,7 @@ class Excel extends Component {
     this._sort = this._sort.bind(this);
   }
   componentWillReceiveProps(nextProps) {
-    this.setState({data: nextProps.data});
+    this.setState({"data": nextProps.data});
   }
   _sort(event) {
     let column = event.target.cellIndex;

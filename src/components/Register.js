@@ -1,25 +1,24 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
 import * as firebaseConfig from '../firebase.config';
 
-class Login extends Component {
+class Register extends Component {
   constructor(props) {
     super(props);
-    this.state = JSON.parse(localStorage.getItem("authState")) || {
+    this.state = {
       'email': '',
       'password': '',
-      'signedIn': false
+      'registered': false
     };
     this._onEmailChange = this._onEmailChange.bind(this);
     this._onPasswordChange = this._onPasswordChange.bind(this);
-    this._login = this._login.bind(this);
+    this._register = this._register.bind(this);
   }
   componentDidMount() {
-    console.info('Login state @componentDidMount: ', this.state);
+    console.info('Register state @componentDidMount: ', this.state);
   }
   componentWillReceiveProps(nextProps) {
-    console.info({ 'Login state @componentWillReceiveProps': this.state, 'params': nextProps });
+    console.info({ 'Register state @componentWillReceiveProps': this.state, 'params': nextProps });
   }
   _onEmailChange(event) {
     this.setState({ 'email': event.target.value });
@@ -27,17 +26,18 @@ class Login extends Component {
   _onPasswordChange(event) {
     this.setState({ 'password': event.target.value });
   }
-  _login(event) {
+  _register() {
     event.preventDefault();
 
-    firebaseConfig.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+    firebaseConfig.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
+        // Handle Success here.
         this.setState({
-          'signedIn': true
+          'registered': true
         });
         localStorage.setItem('authState', JSON.stringify({
           'email': this.state.email,
-          'signedIn': this.state.signedIn
+          'signedIn': this.state.registered
         }));
       })
       .catch((error) => {
@@ -47,10 +47,10 @@ class Login extends Component {
       });
   }
   render() {
-    return this.state.signedIn ? (
-      <Redirect to="/" />
+    return this.state.registered ? (
+      <Redirect to="/login" />
     ) : (
-        <form className="login-form flex-vertically" autoComplete="off" onSubmit={this._login}>
+        <form className="login-form flex-vertically" autoComplete="off" onSubmit={this._register}>
           <label className="form-label flex-vertically">
             Email
           <input
@@ -73,16 +73,12 @@ class Login extends Component {
               onChange={this._onPasswordChange} />
             <br />
           </label>
-          <button className="btn login-btn">Login</button>
+          <button className="btn login-btn">Register</button>
           <hr />
-          <Link className="actionLink" to="/register">Not an User? Register to continue.</Link>
+          <Link className="actionLink" to="/login">Already an User? Login to continue.</Link>
         </form>
       );
   }
 }
 
-Login.propTypes = {
-  "notifyLogin": PropTypes.func.isRequired
-};
-
-export default Login;
+export default Register;
