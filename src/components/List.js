@@ -8,35 +8,51 @@ class List extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      'headers': ['Amount', 'DueDate', 'Name', 'Recurrence', 'SharedWith'],
+      'headers': ['Amount', 'DueDate', 'Name', 'Recurrence', 'SharedWith', 'Delete'],
       'data': []
     };
+    this._removeRow = this._removeRow.bind(this);
+  }
+  _removeRow(key) {
+    if (window.confirm(`Delete item from list? This cannot be undone.`)) {
+
+      let { data } = this.state;
+      let i = Number(event.target.id);
+
+      expensesRef(key).remove()
+        .then(() => {
+          this.setState({
+            'data': [
+              ...data.slice(0, i),
+              ...data.slice(i + 1, data.length)
+            ]
+          });
+        })
+        .catch((error) => console.warn(`Error removing entry`, error));
+
+    }
   }
   componentDidMount() {
 
-    expensesRef().on('value', (snapshot) => {
+    expensesRef('').on('child_added', (snapshot) => {
 
-      this.setState({ 'data': [] });
+      this.setState({
+        'data': [
 
-      const store = snapshot.val();
-
-      Object.values(store).map((entry) => {
-        this.setState({
-          data: [
-            ...this.state.data,
-            Object.values(entry).map(key => key.toString())
+          ...this.state.data,
+          [
+            ...Object.values(snapshot.val()),
+            <button
+              className="btn-delete"
+              id={this.state.data.length}
+              onClick={() => this._removeRow(snapshot.key)}>x</button>
           ]
-        });
+
+        ]
       });
 
-
-    }, (error) => {
-      console.warn({ error });
-
     });
-  }
-  componentWillReceiveProps(nextProps) {
-    console.log({ 'fn': 'componentWillReceiveProps', 'params': nextProps });
+
   }
   render() {
     return (

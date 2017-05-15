@@ -10,9 +10,17 @@ class Excel extends Component {
     };
     this._sort = this._sort.bind(this);
   }
-  componentWillReceiveProps(nextProps) {
-    this.setState({"data": nextProps.data});
+  componentDidMount() {
+    console.info('Excel state @componentDidMount: ', this.state);
   }
+  componentWillReceiveProps(nextProps) {
+    this.setState({ "data": nextProps.data });
+  }  
+  // componentWillUpdate(nextProps, nextState) {
+  //   console.info('Excel @componentWillUpdate: ', {
+  //     nextProps, nextState
+  //   });
+  // }  
   _sort(event) {
     let column = event.target.cellIndex;
     let data = Array.from(this.state.data);
@@ -39,10 +47,10 @@ class Excel extends Component {
         </thead>
 
         <tbody className='table__body'>
-          {this.state.data.map((row, i, arr) => (
-            <tr id={`row--${i}`} key={i}>
-              {row.map((cell, i, arr) => (
-                <td key={i}>{cell}</td>
+          {this.state.data.map((row, rowId, arr) => (
+            <tr id={`row--${rowId}`} key={rowId}>
+              {row.map((cell, cellId, arr) => (
+                <td data-row={`row--${rowId}`} key={cellId}>{cell}</td>
               ))}
             </tr>
           ))}

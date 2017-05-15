@@ -14,7 +14,7 @@ const version = '/v0';
 const api = firebase.database().ref(version);
 
 // Database Refs
-const expensesRef = () => api.child(`expenses/`);
+const expensesRef = (expenseId) => api.child(`expenses/${expenseId}`);
 const userRef = (userId) => api.child(`users/${userId}`);
 const userExpensesRef = (userId) => api.child(`user-expenses/${userId}`);
 

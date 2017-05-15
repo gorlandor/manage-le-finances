@@ -20,7 +20,7 @@ class ExpenseForm extends Component {
   _onSubmit(event) {
     event.preventDefault();
     this.setState({ loading: true });
-    firebaseConfig.expensesRef()
+    firebaseConfig.expensesRef('')
       .push({
         'amount': this.state.amount,
         'due_date': this.state.due_date,
