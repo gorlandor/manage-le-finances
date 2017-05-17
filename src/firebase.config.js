@@ -16,7 +16,7 @@ const api = firebase.database().ref(version);
 // Database Refs
 const expensesRef = (expenseId) => api.child(`expenses/${expenseId}`);
 const userRef = (userId) => api.child(`users/${userId}`);
-const userExpensesRef = (userId) => api.child(`user-expenses/${userId}`);
+const userExpensesRef = (userId, expenseId) => api.child(`user-expenses/${userId}/${expenseId}`);
 
 // firebase module
 export { auth, expensesRef, userRef, userExpensesRef };

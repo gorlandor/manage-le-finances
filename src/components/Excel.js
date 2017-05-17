@@ -16,11 +16,6 @@ class Excel extends Component {
   componentWillReceiveProps(nextProps) {
     this.setState({ "data": nextProps.data });
   }  
-  // componentWillUpdate(nextProps, nextState) {
-  //   console.info('Excel @componentWillUpdate: ', {
-  //     nextProps, nextState
-  //   });
-  // }  
   _sort(event) {
     let column = event.target.cellIndex;
     let data = Array.from(this.state.data);

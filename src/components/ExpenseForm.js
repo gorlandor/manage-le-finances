@@ -19,21 +19,22 @@ class ExpenseForm extends Component {
   }
   _onSubmit(event) {
     event.preventDefault();
+
+    let { amount, due_date, expense_title, recurrence, shared_with } = this.state;
+
     this.setState({ loading: true });
-    firebaseConfig.expensesRef('')
-      .push({
-        'amount': this.state.amount,
-        'due_date': this.state.due_date,
-        'expense_title': this.state.expense_title,
-        'recurrence': this.state.recurrence,
-        'shared_with': this.state.shared_with
-      })
-      .then(() => {
-        this.setState(this.initialState);
-      })
-      .catch((err) => {
-        console.warn({ err });
-      });
+
+    let transaction = firebaseConfig.expensesRef('').push();
+    transaction.set({ amount, due_date, expense_title, recurrence, shared_with })
+      .then(() => this.setState(this.initialState))
+      .catch((err) => console.warn({ err }));
+
+    if (transaction !== undefined) {
+      let { uid } = JSON.parse(localStorage.getItem("authState"));
+      firebaseConfig.userExpensesRef(uid, transaction.key)
+        .set({ amount, due_date, expense_title, recurrence, shared_with });
+    }
+
   }
   render() {
     return (

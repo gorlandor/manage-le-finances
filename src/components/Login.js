@@ -32,13 +32,15 @@ class Login extends Component {
 
     firebaseConfig.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
+        let uid = firebaseConfig.auth().currentUser.uid;
         localStorage.setItem('authState', JSON.stringify({
           'email': this.state.email,
-          'signedIn': true
+          'signedIn': true,
+          uid
         }));
         this.setState({
           'signedIn': true
-        });        
+        });
       })
       .catch((error) => {
         // Handle Errors here.

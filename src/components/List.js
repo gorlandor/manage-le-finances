@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { expensesRef, userRef, userExpensesRef } from '../firebase.config';
+import * as firebaseConfig from '../firebase.config';
 import Excel from './Excel';
 import ExpenseForm from './ExpenseForm';
 
@@ -33,8 +33,9 @@ class List extends Component {
     }
   }
   componentDidMount() {
+    let { uid } = JSON.parse(localStorage.getItem("authState"));
 
-    expensesRef('').on('child_added', (snapshot) => {
+    firebaseConfig.userExpensesRef(uid, '').on('child_added', (snapshot) => {
 
       this.setState({
         'data': [
