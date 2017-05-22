@@ -1,9 +1,20 @@
+// @flow
 import React, { Component } from 'react';
 import { Link, Redirect } from 'react-router-dom';
 import * as firebaseConfig from '../firebase.config';
 
 class Register extends Component {
-  constructor(props) {
+  state: {
+    email: string,
+    password: string,
+    registered: boolean
+  };
+
+  _onEmailChange: Function;
+  _onPasswordChange: Function;
+  _register: Function;
+
+  constructor(props: Object) {
     super(props);
     this.state = {
       'email': '',
@@ -14,16 +25,10 @@ class Register extends Component {
     this._onPasswordChange = this._onPasswordChange.bind(this);
     this._register = this._register.bind(this);
   }
-  componentDidMount() {
-    console.info('Register state @componentDidMount: ', this.state);
-  }
-  componentWillReceiveProps(nextProps) {
-    console.info({ 'Register state @componentWillReceiveProps': this.state, 'params': nextProps });
-  }
-  _onEmailChange(event) {
+  _onEmailChange(event: SyntheticInputEvent) {
     this.setState({ 'email': event.target.value });
   }
-  _onPasswordChange(event) {
+  _onPasswordChange(event: SyntheticInputEvent) {
     this.setState({ 'password': event.target.value });
   }
   _register() {
@@ -32,7 +37,7 @@ class Register extends Component {
     firebaseConfig.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
         // Handle Success here.
-        localStorage.setItem('authState', JSON.stringify({
+        window.localStorage.setItem('authState', JSON.stringify({
           'email': this.state.email,
           'signedIn': true
         }));

@@ -1,12 +1,22 @@
+// @flow
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Link, Redirect } from 'react-router-dom';
 import * as firebaseConfig from '../firebase.config';
 
 class Login extends Component {
-  constructor(props) {
+  state: {
+    email: string,
+    password: string,
+    signedIn: boolean
+  };
+
+  _onEmailChange: Function;
+  _onPasswordChange: Function;
+  _login: Function;
+
+  constructor(props: Object) {
     super(props);
-    this.state = JSON.parse(localStorage.getItem("authState")) || {
+    this.state = JSON.parse(window.localStorage.getItem("authState")) || {
       'email': '',
       'password': '',
       'signedIn': false
@@ -15,19 +25,13 @@ class Login extends Component {
     this._onPasswordChange = this._onPasswordChange.bind(this);
     this._login = this._login.bind(this);
   }
-  componentDidMount() {
-    console.info('Login state @componentDidMount: ', this.state);
-  }
-  componentWillReceiveProps(nextProps) {
-    console.info({ 'Login state @componentWillReceiveProps': this.state, 'params': nextProps });
-  }
-  _onEmailChange(event) {
+  _onEmailChange(event: SyntheticInputEvent) {
     this.setState({ 'email': event.target.value });
   }
-  _onPasswordChange(event) {
+  _onPasswordChange(event: SyntheticInputEvent) {
     this.setState({ 'password': event.target.value });
   }
-  _login(event) {
+  _login(event: Event) {
     event.preventDefault();
 
     firebaseConfig.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
@@ -85,9 +89,5 @@ class Login extends Component {
       );
   }
 }
-
-Login.propTypes = {
-  "notifyLogin": PropTypes.func.isRequired
-};
 
 export default Login;

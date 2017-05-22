@@ -1,11 +1,18 @@
+// @flow
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import * as firebaseConfig from '../firebase.config';
 import Excel from './Excel';
 import ExpenseForm from './ExpenseForm';
 
 class List extends Component {
-  constructor(props) {
+  state: {
+    headers: Array<string>,
+    data: Array<any>
+  };
+
+  _removeRow: Function;
+
+  constructor(props: Object) {
     super(props);
     this.state = {
       'headers': ['Amount', 'DueDate', 'Name', 'Recurrence', 'SharedWith', 'Delete'],
@@ -13,13 +20,12 @@ class List extends Component {
     };
     this._removeRow = this._removeRow.bind(this);
   }
-  _removeRow(key) {
+  _removeRow(key: string, i: number) {
     if (window.confirm(`Delete item from list? This cannot be undone.`)) {
 
       let { data } = this.state;
-      let i = Number(event.target.id);
 
-      expensesRef(key).remove()
+      firebaseConfig.expensesRef(key).remove()
         .then(() => {
           this.setState({
             'data': [
@@ -33,7 +39,7 @@ class List extends Component {
     }
   }
   componentDidMount() {
-    let { uid } = JSON.parse(localStorage.getItem("authState"));
+    let { uid } = JSON.parse(window.localStorage.getItem("authState"));
 
     firebaseConfig.userExpensesRef(uid, '').on('child_added', (snapshot) => {
 
@@ -46,7 +52,9 @@ class List extends Component {
             <button
               className="btn-delete"
               id={this.state.data.length}
-              onClick={() => this._removeRow(snapshot.key)}>x</button>
+              onClick={(event: SyntheticInputEvent) => {
+                this._removeRow(snapshot.key, event.target.id);
+              }}>x</button>
           ]
 
         ]

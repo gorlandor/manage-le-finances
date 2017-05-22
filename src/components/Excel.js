@@ -1,30 +1,38 @@
+// @flow
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
+type Props = {
+  headers: Array<string>,
+  data: Array<any>
+};
+type State = {
+  data: Array<any>,
+  sortby: string,
+  descending: boolean
+};
 class Excel extends Component {
-  constructor(props) {
+  state: State;
+  _sort: Function;
+  constructor(props: Props) {
     super(props);
     this.state = {
       "data": props.data,
-      "sortby": null,
+      "sortby": '',
       "descending": false
     };
     this._sort = this._sort.bind(this);
   }
-  componentDidMount() {
-    console.info('Excel state @componentDidMount: ', this.state);
-  }
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     this.setState({ "data": nextProps.data });
-  }  
-  _sort(event) {
+  }
+  _sort(event: any) {
     let column = event.target.cellIndex;
-    let data = Array.from(this.state.data);
+    let { data } = this.state;
     let descending = this.state.sortby === column && !this.state.descending;
     data.sort((a, b) => descending
       ? (a[column] < b[column] ? 1 : -1)
       : (a[column] > b[column] ? 1 : -1));
-    this.setState({ "data": data, "sortby": column, "descending": descending });
-    console.log({ "data": data, "sortby": this.props.headers[column], "descending": descending });
+    this.setState({ data, "sortby": column, descending });
   }
   render() {
     return (
@@ -55,5 +63,8 @@ class Excel extends Component {
     );
   }
 }
-
+Excel.propTypes = {
+  headers: PropTypes.array.isRequired,
+  data: PropTypes.array
+};
 export default Excel;

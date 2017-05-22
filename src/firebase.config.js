@@ -1,3 +1,4 @@
+// @flow
 import firebase, { app, auth, database } from '../node_modules/firebase';
 
 const config = {
@@ -14,9 +15,15 @@ const version = '/v0';
 const api = firebase.database().ref(version);
 
 // Database Refs
-const expensesRef = (expenseId) => api.child(`expenses/${expenseId}`);
-const userRef = (userId) => api.child(`users/${userId}`);
-const userExpensesRef = (userId, expenseId) => api.child(`user-expenses/${userId}/${expenseId}`);
+const expensesRef = (expenseId: string) => {
+  return api.child(`expenses/${expenseId}`);
+};
+const userRef = (userId: string) => {
+  return api.child(`users/${userId}`);
+};
+const userExpensesRef = (userId: string, expenseId: string) => {
+  return api.child(`user-expenses/${userId}/${expenseId}`);
+};
 
 // firebase module
 export { auth, expensesRef, userRef, userExpensesRef };
