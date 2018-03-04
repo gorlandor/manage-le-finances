@@ -36,10 +36,12 @@ class Register extends Component {
 
     firebaseConfig.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
-        // Handle Success here.
-        window.localStorage.setItem('authState', JSON.stringify({
+        // Handle Success here.        
+        let uid = firebaseConfig.auth().currentUser.uid;
+        localStorage.setItem('authState', JSON.stringify({
           'email': this.state.email,
-          'signedIn': true
+          'signedIn': true,
+          uid
         }));
         this.setState({
           'registered': true
