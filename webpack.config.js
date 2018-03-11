@@ -10,6 +10,13 @@ module.exports = {
         path: path.resolve(__dirname, 'public'),
         filename: '[name].js'
     },
+    // Enable sourcemaps for debugging webpack's output.
+    devtool: "source-map",
+
+    resolve: {
+        // Add '.ts' and '.tsx' as resolvable extensions.
+        extensions: [".ts", ".tsx", ".js", ".json"]
+    },
     module: {
         rules: [
             {
@@ -27,6 +34,15 @@ module.exports = {
             {
                 test: /\.json$/,
                 use: 'json-loader'
+            },
+            { 
+                test: /\.tsx?$/, 
+                loader: "awesome-typescript-loader" 
+            },
+            { 
+                enforce: "pre", 
+                test: /\.js$/, 
+                loader: "source-map-loader" 
             },
             {
                 test: /\.js$/,

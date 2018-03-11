@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import { Redirect } from 'react-router-dom';
 import List from './List';
-import Login from './Login';
+import Login from './Login.tsx';
 
 class App extends Component {
   state: {

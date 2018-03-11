@@ -2,7 +2,7 @@
 import React, { Component } from 'react';
 import * as firebaseConfig from '../firebase.config';
 import Excel from './Excel';
-import ExpenseForm from './ExpenseForm';
+import ExpenseForm from './ExpenseForm.tsx';
 
 class List extends Component {
   state: {

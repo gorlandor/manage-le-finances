@@ -2,10 +2,10 @@ import React from 'react';
 import { render } from 'react-dom';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 import App from './components/App';
-import Login from './components/Login';
-import Register from './components/Register';
+import Login from './components/Login.tsx';
+import Register from './components/Register.tsx';
 import List from './components/List';
-import ExpenseForm from './components/ExpenseForm';
+import ExpenseForm from './components/ExpenseForm.tsx';
 
 const AppShell = () => (
 	<Router>
