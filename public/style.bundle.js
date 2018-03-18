@@ -83,7 +83,7 @@ exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader
 
 
 // module
-exports.push([module.i, ":root {\n  --primary-color: #673AB7;\n  --bg-color: ghostwhite; }\n\n* {\n  box-sizing: border-box; }\n\nhtml, body {\n  width: 100%;\n  height: 100%;\n  min-height: 100vh;\n  margin: 0;\n  padding: 0;\n  border: none;\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 1rem;\n  font-weight: 500; }\n\nmain {\n  top: 3.5rem;\n  width: 100%;\n  min-height: calc(95vh - 3.5rem);\n  padding: 1rem; }\n\n.flex-container {\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center; }\n\n.flex-vertically {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center; }\n\n.flex-horizontally {\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center; }\n\n.actionLink {\n  margin: 0.5rem auto; }\n\n.btn-delete {\n  width: 80%;\n  height: 2em;\n  margin: 0;\n  padding: .5em;\n  border: 0;\n  background-color: #E91E63;\n  color: #fff;\n  font-size: 1.3em;\n  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3); }\n\n.btn-delete:hover, .btn-delete:focus {\n  background-color: #C2185B;\n  color: #fff; }\n", ""]);
+exports.push([module.i, ":root {\n  --primary-color: #673AB7;\n  --bg-color: ghostwhite; }\n\n* {\n  box-sizing: border-box; }\n\nhtml, body {\n  width: 100%;\n  height: 100%;\n  min-height: 100vh;\n  margin: 0;\n  padding: 0;\n  border: none;\n  font-family: Arial, Helvetica, sans-serif;\n  font-size: 1rem;\n  font-weight: 500; }\n\nmain {\n  top: 3.5rem;\n  width: 100%;\n  min-height: calc(95vh - 3.5rem);\n  padding: 1rem; }\n\n.flex-container {\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-start;\n  align-items: center; }\n\n.flex-vertically {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center; }\n\n.flex-horizontally {\n  display: flex;\n  flex-direction: row;\n  justify-content: center;\n  align-items: center; }\n\n.flex-around {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-around;\n  align-items: center; }\n\n.actionLink {\n  margin: 0.5rem auto; }\n\n.btn-delete {\n  width: 80%;\n  height: 2em;\n  margin: 0;\n  padding: .5em;\n  border: 0;\n  background-color: #E91E63;\n  color: #fff;\n  font-size: 1.3em;\n  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3); }\n\n.btn-delete:hover, .btn-delete:focus {\n  background-color: #C2185B;\n  color: #fff; }\n\n.full-width {\n  width: 100%;\n  max-width: 992px; }\n", ""]);
 
 // exports
 
@@ -102,7 +102,7 @@ exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader
 
 
 // module
-exports.push([module.i, ".table {\n  width: 100%;\n  max-width: 992px;\n  margin: 0 auto;\n  padding: 2rem 0;\n  text-align: left;\n  font-size: 0.875rem; }\n  .table__header th {\n    color: var(--primary-color);\n    text-align: center; }\n  .table__body tr td {\n    color: black;\n    font-size: 0.750rem;\n    text-align: center; }\n  .table__footer tr td {\n    color: var(--primary-color); }\n", ""]);
+exports.push([module.i, ".table {\n  width: 100%;\n  max-width: 992px;\n  margin: 0 auto;\n  padding: 2rem 0;\n  text-align: left;\n  font-size: 0.825rem; }\n  .table__header th {\n    color: var(--primary-color);\n    text-align: center; }\n  .table__body tr td {\n    color: black;\n    font-size: 0.750rem;\n    text-align: center; }\n  .table__footer tr td {\n    color: var(--primary-color); }\n", ""]);
 
 // exports
 

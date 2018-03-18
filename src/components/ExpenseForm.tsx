@@ -1,9 +1,11 @@
 import * as React from 'react';
-const firebaseConfig = require('../firebase.config');
+import { Link, Redirect } from 'react-router-dom';
+import * as firebaseConfig from '../firebase.config';
 import { ExpenseRecurrence, IExpense } from '../models/Expense.interface';
 
 class ExpenseForm extends React.Component {
 
+  toList: boolean = false;
   state: IExpense;
   baseState: IExpense;
 
@@ -17,8 +19,7 @@ class ExpenseForm extends React.Component {
       'shared_with': 'myself',
       'loading': false
     };
-    this.baseState = this.state;
-    this._onSubmit = this._onSubmit.bind(this);
+    this.baseState = this.state;    
   }
   _onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -33,13 +34,30 @@ class ExpenseForm extends React.Component {
       .catch((err: Error) => console.warn({ err }));
 
     if (transaction !== undefined) {
-      let { uid } = JSON.parse(window.localStorage.getItem("authState"));
-      firebaseConfig.userExpensesRef(uid, transaction.key)
+      let { uid } = JSON.parse(window.localStorage.getItem("authState") || `${{
+        'email': '',
+        'password': '',
+        'signedIn': false
+      }}`);
+      firebaseConfig.userExpensesRef(uid, transaction.key || "")
         .set({ amount, due_date, expense_title, recurrence, shared_with });
     }
+
+    this.toList = true;
   }
   render() {
+
+    if (this.toList === true) {
+      return <Redirect to='/expense-list' />
+    }
+
     return (
+      <React.Fragment>
+        <h3 className="flex-around">
+        Expenses 
+        <Link to="/expense-list">View list</Link>
+        <Link to="/logout">Logout</Link>
+      </h3>
       <form className="login-form flex-container" autoComplete="off" onSubmit={this._onSubmit}>
         <label className="form-label flex-vertically">
           Title
@@ -114,6 +132,7 @@ class ExpenseForm extends React.Component {
           ? <button className="btn login-btn" disabled>Submit</button>
           : <button className="btn login-btn">Submit</button>}
       </form>
+      </React.Fragment>
     );
   }
 }

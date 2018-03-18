@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = {
     entry: {
         'style.bundle': './src/style.entry.js',
-        'app.bundle': './src/app.entry.js'
+        'app.bundle': './src/app.entry.tsx'
     },
     output: {
         path: path.resolve(__dirname, 'public'),
@@ -37,7 +37,7 @@ module.exports = {
             },
             { 
                 test: /\.tsx?$/, 
-                loader: "awesome-typescript-loader" 
+                loader: "awesome-typescript-loader?silent=true" 
             },
             { 
                 enforce: "pre", 

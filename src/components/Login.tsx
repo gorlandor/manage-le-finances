@@ -1,19 +1,19 @@
 import * as React from 'react';
 import { Link, Redirect } from 'react-router-dom';
-const firebaseConfig = require('../firebase.config');
+import * as firebaseConfig from '../firebase.config';
 import { IAuth } from '../models/Auth.interface';
 
 class Login extends React.Component {
-  
+
   state: IAuth;
 
   constructor(props: Object) {
     super(props);
-    this.state = JSON.parse(window.localStorage.getItem("authState")) || {
+    this.state = JSON.parse(window.localStorage.getItem("authState")!) || {
       'email': '',
       'password': '',
       'signedIn': false
-    };    
+    };
   }
   _onEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ 'email': event.target.value });
@@ -26,7 +26,7 @@ class Login extends React.Component {
 
     firebaseConfig.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
-        let uid = firebaseConfig.auth().currentUser.uid;
+        let uid = firebaseConfig.auth().currentUser!.uid;
         localStorage.setItem('authState', JSON.stringify({
           'email': this.state.email,
           'signedIn': true,
@@ -58,6 +58,7 @@ class Login extends React.Component {
               id="email"
               name="email"
               placeholder="Email"
+              autoComplete="email"
               onChange={this._onEmailChange} />
             <br />
           </label>
@@ -69,6 +70,7 @@ class Login extends React.Component {
               id="password"
               name="password"
               placeholder="Password"
+              autoComplete="current-password"
               onChange={this._onPasswordChange} />
             <br />
           </label>

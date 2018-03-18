@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link, Redirect } from 'react-router-dom';
-const firebaseConfig = require('../firebase.config');
+import * as firebaseConfig from '../firebase.config';
 import { IAuth } from '../models/Auth.interface';
 
 class Register extends React.Component {
@@ -27,7 +27,7 @@ class Register extends React.Component {
     firebaseConfig.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
         // Handle Success here.        
-        let uid = firebaseConfig.auth().currentUser.uid;
+        let uid = firebaseConfig.auth().currentUser!.uid;
         localStorage.setItem('authState', JSON.stringify({
           'email': this.state.email,
           'signedIn': true,
@@ -56,6 +56,7 @@ class Register extends React.Component {
               id="email"
               name="email"
               placeholder="Email"
+              autoComplete="email"
               onChange={this._onEmailChange} />
             <br />
           </label>
@@ -67,6 +68,7 @@ class Register extends React.Component {
               id="password"
               name="password"
               placeholder="Password"
+              autoComplete="current-password"
               onChange={this._onPasswordChange} />
             <br />
           </label>
