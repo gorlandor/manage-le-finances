@@ -25,23 +25,21 @@ class List extends React.Component {
 
       let { rows } = this.state;
 
-      firebaseConfig.expensesRef(key).remove()
-        .then(() => {
+      firebaseConfig.expensesRef(key).remove()        
+        .catch((error) => console.warn(`Error removing entry`, error));
 
+      let { uid } = JSON.parse(window.localStorage.getItem("authState")!);
+
+      firebaseConfig.userExpensesRef(uid, key).remove()
+        .then(() => {
           this.setState({
             'rows': [
               ...rows.slice(0, i),
               ...rows.slice(i + 1)
             ]
           });
-
+          console.log(`Deleted entry ${uid}/${key}`)
         })
-        .catch((error) => console.warn(`Error removing entry`, error));
-
-      let { uid } = JSON.parse(window.localStorage.getItem("authState")!);
-
-      firebaseConfig.userExpensesRef(uid, key).remove()
-        .then(() => console.log(`Deleted entry ${uid}/${key}`))
         .catch((error) => console.warn(`Error removing entry`, error));
 
     }
@@ -75,26 +73,7 @@ class List extends React.Component {
           editable: true,
           removable: true
         };
-      })
-
-      // let rows = keys.map((uid, rowId, arr) => (
-      //   <tr key={uid}>{
-      //     [
-      //       ...Object.keys(expenses[rowId]).map((key, cellId) => (
-
-      //         <td key={`${uid}__cell--${cellId}`}>
-      //           {expenses[rowId][key]}
-      //         </td>
-
-      //       )),
-
-      //       <button
-      //         className="btn-delete"
-      //         onClick={() => this._removeRow(uid, rowId)}
-      //       >x</button>
-      //     ]
-      //   }</tr>
-      // ));
+      });
 
       this.setState({ rows: dataRows });
 

@@ -1,0 +1,66 @@
+form {
+  width: 100%;
+  height: 100%;
+  min-height: calc(95vh - 7rem);
+  padding: 0;
+  border: none; }
+  form .form-label {
+    color: #673AB7;
+    font-weight: 700;
+    text-align: left; }
+  form .form-control {
+    width: 16rem;
+    height: 2rem;
+    margin: 0.5rem auto;
+    padding: 4px;
+    border: 1px solid #aaa;
+    border-radius: 0.5rem;
+    outline-color: #673AB7; }
+  form .btn {
+    width: 16rem;
+    height: 2rem;
+    margin: 0;
+    border: none;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+    border-radius: 0.5rem;
+    background-color: #673AB7;
+    color: ghostwhite;
+    font-size: 1.125rem;
+    text-align: center; }
+  form .btn:hover, form .btn:focus {
+    background-color: #5E35B1;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.4); }
+
+.list-wrapper {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  border: none; }
+  .list-wrapper .expenses {
+    width: 100%;
+    margin: 0.5rem;
+    padding: 0; }
+  @media only screen and (min-width: 768px) {
+    .list-wrapper {
+      min-width: 640px; } }
+
+.table {
+  width: 100%;
+  max-width: 992px;
+  margin: 0 auto;
+  padding: 2rem 0;
+  text-align: left;
+  font-size: 0.825rem; }
+  .table__header th {
+    color: var(--primary-color);
+    text-align: center; }
+  .table__body tr td {
+    color: black;
+    font-size: 0.750rem;
+    text-align: center; }
+  .table__footer tr td {
+    color: var(--primary-color); }
+
+
+/*# sourceMappingURL=style.bundle.css.map*/

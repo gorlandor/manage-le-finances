@@ -1,9 +1,10 @@
 const webpack = require('webpack');
 const path = require('path');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
     entry: {
-        'style.bundle': './src/style.entry.js',
+        'style.bundle': './src/style.entry.scss',
         'app.bundle': './src/app.entry.tsx'
     },
     output: {
@@ -22,9 +23,9 @@ module.exports = {
             {
                 test: /\.scss$/,
                 use: [
-                    { loader: 'style-loader' },
-                    { loader: 'css-loader' },
-                    { loader: 'sass-loader' }
+                    MiniCssExtractPlugin.loader,
+                    "css-loader",
+                    "sass-loader"
                 ]
             },
             {
@@ -35,30 +36,14 @@ module.exports = {
                 test: /\.json$/,
                 use: 'json-loader'
             },
-            { 
-                test: /\.tsx?$/, 
-                loader: "awesome-typescript-loader?silent=true" 
-            },
-            { 
-                enforce: "pre", 
-                test: /\.js$/, 
-                loader: "source-map-loader" 
+            {
+                test: /\.tsx?$/,
+                loader: "awesome-typescript-loader?silent=true"
             },
             {
+                enforce: "pre",
                 test: /\.js$/,
-                exclude: /(node_modules|bower_components)/,
-                use: {
-                    loader: 'babel-loader'
-                }
-            },
-            {
-                test: /\.html$/,
-                use: {
-                    loader: 'html-loader',
-                    options: {
-                        minimize: true
-                    }
-                }
+                loader: "source-map-loader"
             }
         ]
     },
@@ -67,6 +52,21 @@ module.exports = {
             'process.env': {
                 NODE_ENV: JSON.stringify('production')
             }
+        }),
+        new MiniCssExtractPlugin({
+            filename: "[name].css",
+            chunkFilename: "[id].css"
         })
-    ]
+    ],
+    optimization: {
+        splitChunks: {
+            cacheGroups: {
+                commons: {
+                    test: /[\\/]node_modules[\\/]/,
+                    name: "vendors.bundle",
+                    chunks: "all"
+                }
+            }
+        }
+    }
 };
