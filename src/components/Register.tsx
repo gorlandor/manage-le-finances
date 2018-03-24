@@ -1,83 +1,48 @@
 import * as React from 'react';
-import { Link, Redirect } from 'react-router-dom';
-import * as firebaseConfig from '../firebase.config';
-import { IAuth } from '../models/Auth.interface';
+import { Link } from 'react-router-dom';
+import { IAuthManager } from '../models/Auth.interface';
 
-class Register extends React.Component {
+const Register = ({ handleEmailChange, handlePasswordChange, handleRegister, loading }: IAuthManager) => {
+  return (
+    <form
+      className="register-form flex-vertically"
+      onSubmit={(event) => handleRegister(event)}>
+      <label className="form-label flex-vertically">
+        Email
+      <input
+          className="form-control"
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Email"
+          autoComplete="email"
+          onChange={(event) => handleEmailChange(event)} 
+          required/>
+        <br />
+      </label>
+      <label className="form-label flex-vertically">
+        Password
+      <input
+          className="form-control"
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Password"
+          autoComplete="current-password"
+          onChange={(event) => handlePasswordChange(event)} 
+          required/>
+        <br />
+      </label>
 
-  state: IAuth;
+      {loading
+        ? <button className="btn register-btn not-allowed" disabled>Register</button>
+        : <button className="btn register-btn pointer">Register</button>
+      }
 
-  constructor(props: Object) {
-    super(props);
-    this.state = {
-      'email': '',
-      'password': '',
-      'registered': false
-    };
-  }
-  _onEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ 'email': event.target.value });
-  }
-  _onPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ 'password': event.target.value });
-  }
-  _register = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    firebaseConfig.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
-      .then(() => {
-        // Handle Success here.        
-        let uid = firebaseConfig.auth().currentUser!.uid;
-        localStorage.setItem('authState', JSON.stringify({
-          'email': this.state.email,
-          'signedIn': true,
-          uid
-        }));
-        this.setState({
-          'registered': true
-        });
-      })
-      .catch((error: Error) => {
-        // Handle Errors here.
-        alert(error.message);
-        console.warn({ error });
-      });
-  }
-  render() {
-    return this.state.registered ? (
-      <Redirect to="/login" />
-    ) : (
-        <form className="login-form flex-vertically" autoComplete="off" onSubmit={this._register}>
-          <label className="form-label flex-vertically">
-            Email
-          <input
-              className="form-control"
-              type="email"
-              id="email"
-              name="email"
-              placeholder="Email"
-              autoComplete="email"
-              onChange={this._onEmailChange} />
-            <br />
-          </label>
-          <label className="form-label flex-vertically">
-            Password
-          <input
-              className="form-control"
-              type="password"
-              id="password"
-              name="password"
-              placeholder="Password"
-              autoComplete="current-password"
-              onChange={this._onPasswordChange} />
-            <br />
-          </label>
-          <button className="btn login-btn">Register</button>
-          <hr />
-          <Link className="actionLink" to="/login">Already an User? Login to continue.</Link>
-        </form>
-      );
-  }
+      <hr />
+      <Link className="actionLink" to="/login">Already an User? Login to continue.</Link>
+    </form>
+  );
 }
 
 export default Register;

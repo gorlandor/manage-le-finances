@@ -4,7 +4,7 @@ import * as firebaseConfig from '../firebase.config';
 import { IDataRow } from '../models/DataTable.interface';
 import Excel from './Excel';
 
-class List extends React.Component {
+class List extends React.Component<{ uid: string }> {
   state: {
     "headers": string[],
     "rows": any[]
@@ -25,10 +25,10 @@ class List extends React.Component {
 
       let { rows } = this.state;
 
-      firebaseConfig.expensesRef(key).remove()        
+      firebaseConfig.expensesRef(key).remove()
         .catch((error) => console.warn(`Error removing entry`, error));
 
-      let { uid } = JSON.parse(window.localStorage.getItem("authState")!);
+      let { uid } = this.props;
 
       firebaseConfig.userExpensesRef(uid, key).remove()
         .then(() => {
@@ -38,7 +38,7 @@ class List extends React.Component {
               ...rows.slice(i + 1)
             ]
           });
-          console.log(`Deleted entry ${uid}/${key}`)
+          //console.log(`Deleted entry ${uid}/${key}`)
         })
         .catch((error) => console.warn(`Error removing entry`, error));
 
@@ -49,7 +49,7 @@ class List extends React.Component {
    * componentDidMount
    */
   public componentDidMount() {
-    let { uid } = JSON.parse(window.localStorage.getItem("authState")!);
+    let { uid } = this.props;
 
     firebaseConfig.userExpensesRef(uid, '').on('value', snapshot => {
       const keys = Object.keys(snapshot!.val());
@@ -84,7 +84,7 @@ class List extends React.Component {
    * render
    */
   public render() {
-    
+
     return (
       <div className='list-wrapper'>
 
@@ -95,7 +95,7 @@ class List extends React.Component {
         </h3>
 
         <Excel headers={this.state.headers} data={this.state.rows} />
-        
+
       </div>
     )
   }

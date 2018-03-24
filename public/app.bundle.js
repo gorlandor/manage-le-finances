@@ -148,33 +148,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react_dom__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
-/* harmony import */ var _components_App__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/App */ "./src/components/App.tsx");
-/* harmony import */ var _components_Login__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/Login */ "./src/components/Login.tsx");
-/* harmony import */ var _components_Logout__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/Logout */ "./src/components/Logout.tsx");
-/* harmony import */ var _components_Register__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/Register */ "./src/components/Register.tsx");
-/* harmony import */ var _components_List__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./components/List */ "./src/components/List.tsx");
-/* harmony import */ var _components_ExpenseForm__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/ExpenseForm */ "./src/components/ExpenseForm.tsx");
-/* harmony import */ var _components_PrivateRoute__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./components/PrivateRoute */ "./src/components/PrivateRoute.tsx");
+/* harmony import */ var _components_App__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/App */ "./src/components/App.tsx");
 
 
 
-
-
-
-
-
-
-
-var AppShell = function () { return (react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_2__["BrowserRouter"], null,
-    react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: "full-width" },
-        react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], { exact: true, path: "/", component: _components_App__WEBPACK_IMPORTED_MODULE_3__["default"] }),
-        react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], { path: "/login", component: _components_Login__WEBPACK_IMPORTED_MODULE_4__["default"] }),
-        react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_2__["Route"], { path: "/register", component: _components_Register__WEBPACK_IMPORTED_MODULE_6__["default"] }),
-        react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_components_PrivateRoute__WEBPACK_IMPORTED_MODULE_9__["default"], { path: "/expense-list", component: _components_List__WEBPACK_IMPORTED_MODULE_7__["default"] }),
-        react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_components_PrivateRoute__WEBPACK_IMPORTED_MODULE_9__["default"], { path: "/expense-form", component: _components_ExpenseForm__WEBPACK_IMPORTED_MODULE_8__["default"] }),
-        react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_components_PrivateRoute__WEBPACK_IMPORTED_MODULE_9__["default"], { path: "/logout", component: _components_Logout__WEBPACK_IMPORTED_MODULE_5__["default"] })))); };
-Object(react_dom__WEBPACK_IMPORTED_MODULE_1__["render"])(react__WEBPACK_IMPORTED_MODULE_0__["createElement"](AppShell, null), document.getElementById('app'));
+Object(react_dom__WEBPACK_IMPORTED_MODULE_1__["render"])(react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_components_App__WEBPACK_IMPORTED_MODULE_2__["default"], null), document.getElementById('app'));
 
 
 /***/ }),
@@ -191,7 +169,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
-/* harmony import */ var _List__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./List */ "./src/components/List.tsx");
+/* harmony import */ var _firebase_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../firebase.config */ "./src/firebase.config.ts");
+/* harmony import */ var _Login__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Login */ "./src/components/Login.tsx");
+/* harmony import */ var _Register__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Register */ "./src/components/Register.tsx");
+/* harmony import */ var _List__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./List */ "./src/components/List.tsx");
+/* harmony import */ var _ExpenseForm__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./ExpenseForm */ "./src/components/ExpenseForm.tsx");
 var __extends = (undefined && undefined.__extends) || (function () {
     var extendStatics = Object.setPrototypeOf ||
         ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
@@ -202,6 +184,18 @@ var __extends = (undefined && undefined.__extends) || (function () {
         d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
     };
 })();
+var __assign = (undefined && undefined.__assign) || Object.assign || function(t) {
+    for (var s, i = 1, n = arguments.length; i < n; i++) {
+        s = arguments[i];
+        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+            t[p] = s[p];
+    }
+    return t;
+};
+
+
+
+
 
 
 
@@ -209,17 +203,113 @@ var App = /** @class */ (function (_super) {
     __extends(App, _super);
     function App(props) {
         var _this = _super.call(this, props) || this;
-        _this.state = JSON.parse(window.localStorage.getItem("authState")) || {
-            'email': '',
-            'signedIn': false
+        _this.storedState = JSON.parse(window.localStorage.getItem("authState"));
+        _this.loading = false;
+        /**
+         * _login
+         */
+        _this._login = function (event) {
+            event.preventDefault();
+            _this.loading = true;
+            _firebase_config__WEBPACK_IMPORTED_MODULE_2__["auth"]().signInWithEmailAndPassword(_this.state.email, _this.state.password)
+                .then(function () {
+                // Handle Success here.
+                _this.setState({
+                    signedIn: true,
+                    uid: _firebase_config__WEBPACK_IMPORTED_MODULE_2__["auth"]().currentUser.uid
+                });
+            })
+                .catch(function (error) {
+                // Handle Errors here.
+                alert(error.message);
+                console.warn({ error: error });
+            })
+                .then(function () {
+                _this.loading = false;
+            });
+        };
+        /**
+         * _register
+         */
+        _this._register = function (event) {
+            event.preventDefault();
+            _firebase_config__WEBPACK_IMPORTED_MODULE_2__["auth"]().createUserWithEmailAndPassword(_this.state.email, _this.state.password)
+                .then(function () {
+                // Handle Success here.                
+                _this.setState({
+                    registered: true,
+                    uid: _firebase_config__WEBPACK_IMPORTED_MODULE_2__["auth"]().currentUser.uid
+                });
+            })
+                .catch(function (error) {
+                // Handle Errors here.
+                alert(error.message);
+                console.warn({ error: error });
+            })
+                .then(function () { return console.log(_this.state); });
+        };
+        /**
+         * _onEmailChange
+         */
+        _this._onEmailChange = function (event) {
+            _this.setState({ 'email': event.target.value });
+        };
+        /**
+         * _onPasswordChange
+         */
+        _this._onPasswordChange = function (event) {
+            _this.setState({ 'password': event.target.value });
+        };
+        /**
+         * _logout
+         */
+        _this._logout = function () {
+            _firebase_config__WEBPACK_IMPORTED_MODULE_2__["auth"]().signOut();
+            _this.setState({ signedIn: false, uid: null });
+        };
+        _this.state = _this.storedState || {
+            email: "",
+            password: "",
+            signedIn: false
         };
         return _this;
     }
     /**
+     * componentDidUpdate
+     */
+    App.prototype.componentWillUpdate = function (nextProps, nextState) {
+        localStorage.setItem("authState", JSON.stringify(nextState));
+    };
+    /**
      * render
      */
     App.prototype.render = function () {
-        return this.state.signedIn ? (react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_List__WEBPACK_IMPORTED_MODULE_2__["default"], null)) : (react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], { to: "/login" }));
+        var _this = this;
+        var loginEventHandlers = {
+            handleEmailChange: this._onEmailChange,
+            handlePasswordChange: this._onPasswordChange,
+            handleLogin: this._login
+        };
+        var registrationEventHandlers = {
+            handleEmailChange: this._onEmailChange,
+            handlePasswordChange: this._onPasswordChange,
+            handleRegister: this._register
+        };
+        return (react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["BrowserRouter"], null,
+            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("div", { className: "full-width" },
+                react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], { exact: true, path: "/", render: function () { return (_this.state.signedIn
+                        ? react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], { to: "/expense-list" })
+                        : react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], { to: "/login" })); } }),
+                react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], { path: "/login", render: function () { return (_this.state.signedIn
+                        ? react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], { to: "/expense-list" })
+                        : react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_Login__WEBPACK_IMPORTED_MODULE_3__["default"], __assign({}, loginEventHandlers, { loading: _this.loading }))); } }),
+                react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], { path: "/register", render: function () { return (react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_Register__WEBPACK_IMPORTED_MODULE_4__["default"], __assign({}, registrationEventHandlers))); } }),
+                react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], { path: "/expense-list", render: function () { return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_List__WEBPACK_IMPORTED_MODULE_5__["default"], { uid: _this.state.uid }); } }),
+                react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], { path: "/expense-form", render: function () { return react__WEBPACK_IMPORTED_MODULE_0__["createElement"](_ExpenseForm__WEBPACK_IMPORTED_MODULE_6__["default"], { uid: _this.state.uid }); } }),
+                react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], { path: "/logout", render: function () {
+                        _this._logout();
+                        return (react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], { to: "/login" }));
+                    } }))));
     };
     return App;
 }(react__WEBPACK_IMPORTED_MODULE_0__["Component"]));
@@ -328,11 +418,7 @@ var ExpenseForm = /** @class */ (function (_super) {
                 .then(function () { return _this.setState(_this.baseState); })
                 .catch(function (err) { return console.warn({ err: err }); });
             if (transaction !== undefined) {
-                var uid = JSON.parse(window.localStorage.getItem("authState") || "" + {
-                    'email': '',
-                    'password': '',
-                    'signedIn': false
-                }).uid;
+                var uid = _this.props.uid;
                 _firebase_config__WEBPACK_IMPORTED_MODULE_2__["userExpensesRef"](uid, transaction.key || "")
                     .set({ amount: amount, due_date: due_date, expense_title: expense_title, recurrence: recurrence, shared_with: shared_with });
             }
@@ -436,13 +522,13 @@ var List = /** @class */ (function (_super) {
                 var rows_1 = _this.state.rows;
                 _firebase_config__WEBPACK_IMPORTED_MODULE_2__["expensesRef"](key).remove()
                     .catch(function (error) { return console.warn("Error removing entry", error); });
-                var uid_1 = JSON.parse(window.localStorage.getItem("authState")).uid;
-                _firebase_config__WEBPACK_IMPORTED_MODULE_2__["userExpensesRef"](uid_1, key).remove()
+                var uid = _this.props.uid;
+                _firebase_config__WEBPACK_IMPORTED_MODULE_2__["userExpensesRef"](uid, key).remove()
                     .then(function () {
                     _this.setState({
                         'rows': rows_1.slice(0, i).concat(rows_1.slice(i + 1))
                     });
-                    console.log("Deleted entry " + uid_1 + "/" + key);
+                    //console.log(`Deleted entry ${uid}/${key}`)
                 })
                     .catch(function (error) { return console.warn("Error removing entry", error); });
             }
@@ -458,7 +544,7 @@ var List = /** @class */ (function (_super) {
      */
     List.prototype.componentDidMount = function () {
         var _this = this;
-        var uid = JSON.parse(window.localStorage.getItem("authState")).uid;
+        var uid = this.props.uid;
         _firebase_config__WEBPACK_IMPORTED_MODULE_2__["userExpensesRef"](uid, '').on('value', function (snapshot) {
             var keys = Object.keys(snapshot.val());
             var expenses = keys.map(function (key) { return snapshot.val()[key]; });
@@ -507,127 +593,26 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
-/* harmony import */ var _firebase_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../firebase.config */ "./src/firebase.config.ts");
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 
 
-
-var Login = /** @class */ (function (_super) {
-    __extends(Login, _super);
-    function Login(props) {
-        var _this = _super.call(this, props) || this;
-        _this._onEmailChange = function (event) {
-            _this.setState({ 'email': event.target.value });
-        };
-        _this._onPasswordChange = function (event) {
-            _this.setState({ 'password': event.target.value });
-        };
-        _this._login = function (event) {
-            event.preventDefault();
-            _firebase_config__WEBPACK_IMPORTED_MODULE_2__["auth"]().signInWithEmailAndPassword(_this.state.email, _this.state.password)
-                .then(function () {
-                var uid = _firebase_config__WEBPACK_IMPORTED_MODULE_2__["auth"]().currentUser.uid;
-                localStorage.setItem('authState', JSON.stringify({
-                    'email': _this.state.email,
-                    'signedIn': true,
-                    uid: uid
-                }));
-                _this.setState({
-                    'signedIn': true
-                });
-            })
-                .catch(function (error) {
-                // Handle Errors here.
-                alert(error.message);
-                console.warn({ error: error });
-            });
-        };
-        _this.state = JSON.parse(window.localStorage.getItem("authState")) || {
-            'email': '',
-            'password': '',
-            'signedIn': false
-        };
-        return _this;
-    }
-    Login.prototype.render = function () {
-        return this.state.signedIn ? (react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], { to: {
-                'pathname': '/',
-                'state': { 'email': this.state.email, 'signedIn': this.state.signedIn }
-            } })) : (react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("form", { className: "login-form flex-vertically", autoComplete: "off", onSubmit: this._login },
-            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("label", { className: "form-label flex-vertically" },
-                "Email",
-                react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("input", { className: "form-control", type: "email", id: "email", name: "email", placeholder: "Email", autoComplete: "email", onChange: this._onEmailChange }),
-                react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("br", null)),
-            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("label", { className: "form-label flex-vertically" },
-                "Password",
-                react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("input", { className: "form-control", type: "password", id: "password", name: "password", placeholder: "Password", autoComplete: "current-password", onChange: this._onPasswordChange }),
-                react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("br", null)),
-            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("button", { className: "btn login-btn" }, "Login"),
-            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("hr", null),
-            react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], { className: "actionLink", to: "/register" }, "Not an User? Register to continue.")));
-    };
-    return Login;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]));
+var Login = function (_a) {
+    var handleEmailChange = _a.handleEmailChange, handlePasswordChange = _a.handlePasswordChange, handleLogin = _a.handleLogin, loading = _a.loading;
+    return (react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("form", { className: "login-form flex-vertically", onSubmit: function (event) { return handleLogin(event); } },
+        react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("label", { className: "form-label flex-vertically" },
+            "Email",
+            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("input", { className: "form-control", type: "email", id: "email", name: "email", placeholder: "Email", autoComplete: "email", onChange: function (event) { return handleEmailChange(event); }, required: true }),
+            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("br", null)),
+        react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("label", { className: "form-label flex-vertically" },
+            "Password",
+            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("input", { className: "form-control", type: "password", id: "password", name: "password", placeholder: "Password", autoComplete: "current-password", onChange: function (event) { return handlePasswordChange(event); }, required: true }),
+            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("br", null)),
+        loading
+            ? react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("button", { className: "btn login-btn pointer", disabled: true }, "Login")
+            : react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("button", { className: "btn login-btn pointer" }, "Login"),
+        react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("hr", null),
+        react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], { className: "actionLink", to: "/register" }, "Not an User? Register to continue.")));
+};
 /* harmony default export */ __webpack_exports__["default"] = (Login);
-
-
-/***/ }),
-
-/***/ "./src/components/Logout.tsx":
-/*!***********************************!*\
-  !*** ./src/components/Logout.tsx ***!
-  \***********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
-
-
-var Logout = function () {
-    window.localStorage.clear();
-    return (react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], { to: "/login" }));
-};
-/* harmony default export */ __webpack_exports__["default"] = (Logout);
-
-
-/***/ }),
-
-/***/ "./src/components/PrivateRoute.tsx":
-/*!*****************************************!*\
-  !*** ./src/components/PrivateRoute.tsx ***!
-  \*****************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
-/* harmony import */ var _firebase_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../firebase.config */ "./src/firebase.config.ts");
-
-
-
-var PrivateRoute = function (_a) {
-    var Component = _a.component, Path = _a.path;
-    return _firebase_config__WEBPACK_IMPORTED_MODULE_2__["auth"]().currentUser === null
-        ? react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], { to: "/login" })
-        : react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Route"], { path: Path, component: Component });
-};
-/* harmony default export */ __webpack_exports__["default"] = (PrivateRoute);
 
 
 /***/ }),
@@ -644,74 +629,25 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var react_router_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/es/index.js");
-/* harmony import */ var _firebase_config__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../firebase.config */ "./src/firebase.config.ts");
-var __extends = (undefined && undefined.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
 
 
-
-var Register = /** @class */ (function (_super) {
-    __extends(Register, _super);
-    function Register(props) {
-        var _this = _super.call(this, props) || this;
-        _this._onEmailChange = function (event) {
-            _this.setState({ 'email': event.target.value });
-        };
-        _this._onPasswordChange = function (event) {
-            _this.setState({ 'password': event.target.value });
-        };
-        _this._register = function (event) {
-            event.preventDefault();
-            _firebase_config__WEBPACK_IMPORTED_MODULE_2__["auth"]().createUserWithEmailAndPassword(_this.state.email, _this.state.password)
-                .then(function () {
-                // Handle Success here.        
-                var uid = _firebase_config__WEBPACK_IMPORTED_MODULE_2__["auth"]().currentUser.uid;
-                localStorage.setItem('authState', JSON.stringify({
-                    'email': _this.state.email,
-                    'signedIn': true,
-                    uid: uid
-                }));
-                _this.setState({
-                    'registered': true
-                });
-            })
-                .catch(function (error) {
-                // Handle Errors here.
-                alert(error.message);
-                console.warn({ error: error });
-            });
-        };
-        _this.state = {
-            'email': '',
-            'password': '',
-            'registered': false
-        };
-        return _this;
-    }
-    Register.prototype.render = function () {
-        return this.state.registered ? (react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Redirect"], { to: "/login" })) : (react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("form", { className: "login-form flex-vertically", autoComplete: "off", onSubmit: this._register },
-            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("label", { className: "form-label flex-vertically" },
-                "Email",
-                react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("input", { className: "form-control", type: "email", id: "email", name: "email", placeholder: "Email", autoComplete: "email", onChange: this._onEmailChange }),
-                react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("br", null)),
-            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("label", { className: "form-label flex-vertically" },
-                "Password",
-                react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("input", { className: "form-control", type: "password", id: "password", name: "password", placeholder: "Password", autoComplete: "current-password", onChange: this._onPasswordChange }),
-                react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("br", null)),
-            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("button", { className: "btn login-btn" }, "Register"),
-            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("hr", null),
-            react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], { className: "actionLink", to: "/login" }, "Already an User? Login to continue.")));
-    };
-    return Register;
-}(react__WEBPACK_IMPORTED_MODULE_0__["Component"]));
+var Register = function (_a) {
+    var handleEmailChange = _a.handleEmailChange, handlePasswordChange = _a.handlePasswordChange, handleRegister = _a.handleRegister, loading = _a.loading;
+    return (react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("form", { className: "register-form flex-vertically", onSubmit: function (event) { return handleRegister(event); } },
+        react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("label", { className: "form-label flex-vertically" },
+            "Email",
+            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("input", { className: "form-control", type: "email", id: "email", name: "email", placeholder: "Email", autoComplete: "email", onChange: function (event) { return handleEmailChange(event); }, required: true }),
+            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("br", null)),
+        react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("label", { className: "form-label flex-vertically" },
+            "Password",
+            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("input", { className: "form-control", type: "password", id: "password", name: "password", placeholder: "Password", autoComplete: "current-password", onChange: function (event) { return handlePasswordChange(event); }, required: true }),
+            react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("br", null)),
+        loading
+            ? react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("button", { className: "btn register-btn not-allowed", disabled: true }, "Register")
+            : react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("button", { className: "btn register-btn pointer" }, "Register"),
+        react__WEBPACK_IMPORTED_MODULE_0__["createElement"]("hr", null),
+        react__WEBPACK_IMPORTED_MODULE_0__["createElement"](react_router_dom__WEBPACK_IMPORTED_MODULE_1__["Link"], { className: "actionLink", to: "/login" }, "Already an User? Login to continue.")));
+};
 /* harmony default export */ __webpack_exports__["default"] = (Register);
 
 
