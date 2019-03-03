@@ -3,12 +3,12 @@ import 'firebase/auth';
 import 'firebase/database';
 
 const config = {
-  apiKey: "AIzaSyD8zpRHrTURhNjPrBgj_VoqKEI_v5-E3cE",
+  apiKey: "",
   authDomain: "manage-le-finances.firebaseapp.com",
   databaseURL: "https://manage-le-finances.firebaseio.com",
   projectId: "manage-le-finances",
   storageBucket: "manage-le-finances.appspot.com",
-  messagingSenderId: "199442396161"
+  messagingSenderId: ""
 };
 
 firebase.initializeApp(config);

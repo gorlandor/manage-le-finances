@@ -38,3 +38,6 @@ jspm_packages
 
 # firebase cache
 .firebase
+
+# public/build dir
+public/build
