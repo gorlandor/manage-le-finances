@@ -1,17 +1,13 @@
-import * as React from 'react';
-import { BrowserRouter as Router, Route, Redirect } from 'react-router-dom';
-import { IAuth } from '../models/Auth.interface';
-import { IExpense } from '../models/Expense.interface';
-import * as firebaseConfig from '../firebase.config';
-import Login from './Login';
-import Register from './Register';
-import PrivateRoute from './PrivateRoute';
-import List from './List';
-import ExpenseForm from './ExpenseForm';
-import Logout from './Logout';
+import * as React from "react";
+import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
+import * as firebaseConfig from "../firebase.config";
+import { IAuth } from "../models/Auth.interface";
+import ExpenseForm from "./ExpenseForm";
+import List from "./List";
+import Login from "./Login";
+import Register from "./Register";
 
 class App extends React.Component {
-
   state: IAuth;
   storedState: IAuth = JSON.parse(window.localStorage.getItem("authState")!);
   loading: boolean = false;
@@ -33,15 +29,15 @@ class App extends React.Component {
 
     this.loading = true;
 
-    firebaseConfig.auth().signInWithEmailAndPassword(this.state.email, this.state.password)
+    firebaseConfig
+      .auth()
+      .signInWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
-
         // Handle Success here.
         this.setState({
           signedIn: true,
           uid: firebaseConfig.auth().currentUser.uid
         });
-
       })
       .catch((error: Error) => {
         // Handle Errors here.
@@ -51,7 +47,7 @@ class App extends React.Component {
       .then(() => {
         this.loading = false;
       });
-  }
+  };
 
   /**
    * _register
@@ -59,15 +55,15 @@ class App extends React.Component {
   private _register = (event: Event) => {
     event.preventDefault();
 
-    firebaseConfig.auth().createUserWithEmailAndPassword(this.state.email, this.state.password)
+    firebaseConfig
+      .auth()
+      .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
-
-        // Handle Success here.                
+        // Handle Success here.
         this.setState({
           registered: true,
           uid: firebaseConfig.auth().currentUser.uid
         });
-
       })
       .catch((error: Error) => {
         // Handle Errors here.
@@ -75,31 +71,29 @@ class App extends React.Component {
         console.warn({ error });
       })
       .then(() => console.log(this.state));
-  }
+  };
 
   /**
    * _onEmailChange
    */
   private _onEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ 'email': event.target.value });
-  }
+    this.setState({ email: event.target.value });
+  };
 
   /**
    * _onPasswordChange
    */
   private _onPasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ 'password': event.target.value });
-  }
+    this.setState({ password: event.target.value });
+  };
 
   /**
    * _logout
    */
   private _logout = () => {
-
     firebaseConfig.auth().signOut();
     this.setState({ signedIn: false, uid: null });
-
-  }
+  };
 
   /**
    * componentDidUpdate
@@ -112,7 +106,6 @@ class App extends React.Component {
    * render
    */
   public render() {
-
     let loginEventHandlers = {
       handleEmailChange: this._onEmailChange,
       handlePasswordChange: this._onPasswordChange,
@@ -128,39 +121,57 @@ class App extends React.Component {
     return (
       <Router>
         <div className="full-width">
+          <Route
+            exact
+            path="/"
+            render={() =>
+              this.state.signedIn ? (
+                <Redirect to="/expense-list" />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
 
-          <Route exact path="/" render={() => (
-            this.state.signedIn
-              ? <Redirect to="/expense-list" />
-              : <Redirect to="/login" />
-          )} />
+          <Route
+            path="/login"
+            render={() =>
+              this.state.signedIn ? (
+                <Redirect to="/expense-list" />
+              ) : (
+                <Login {...loginEventHandlers} loading={this.loading} />
+              )
+            }
+          />
 
-          <Route path="/login" render={() => (
-            this.state.signedIn
-              ? <Redirect to="/expense-list" />
-              : <Login {...loginEventHandlers} loading={this.loading} />
-          )} />
+          <Route
+            path="/register"
+            render={() => <Register {...registrationEventHandlers} />}
+          />
 
-          <Route path="/register" render={() => (
-            <Register {...registrationEventHandlers} />
-          )} />
+          <Route
+            path="/expense-list"
+            render={() => <List uid={this.state.uid} />}
+          />
 
-          <Route path="/expense-list" render={() => <List uid={this.state.uid} />} />
-          <Route path="/expense-form" render={() => <ExpenseForm uid={this.state.uid}/>} />
-          
-          
-          <Route path="/logout" render={() => {
-            this._logout();
-            return (
-              <Redirect to="/login" />
-            );
-          }} />
+          <Route
+            path="/expense-form/:expenseId"
+            render={({ match: { params } }) => (
+              <ExpenseForm uid={this.state.uid} expenseId={params.expenseId} />
+            )}
+          />
 
+          <Route
+            path="/logout"
+            render={() => {
+              this._logout();
+              return <Redirect to="/login" />;
+            }}
+          />
         </div>
       </Router>
     );
   }
-
 }
 
 export default App;

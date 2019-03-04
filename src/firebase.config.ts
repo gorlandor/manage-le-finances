@@ -1,6 +1,6 @@
-import * as firebase from 'firebase/app';
-import 'firebase/auth';
-import 'firebase/database';
+import * as firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/database";
 
 const config = {
   apiKey: "",
@@ -12,8 +12,8 @@ const config = {
 };
 
 firebase.initializeApp(config);
-const version = '/v0';
-const api = firebase.database().ref(version);
+const version = "/v0";
+export const api = firebase.database().ref(version);
 
 // Database Refs
 export const expensesRef = (expenseId: string = "") => {

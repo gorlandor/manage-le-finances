@@ -1,20 +1,28 @@
-import * as React from 'react';
-import { Link } from 'react-router-dom';
-import * as firebaseConfig from '../firebase.config';
-import { IDataRow } from '../models/DataTable.interface';
-import Excel from './Excel';
+import * as React from "react";
+import { Link } from "react-router-dom";
+import * as firebaseConfig from "../firebase.config";
+import { IDataRow } from "../models/DataTable.interface";
+import Excel from "./Excel";
 
 class List extends React.Component<{ uid: string }> {
   state: {
-    "headers": string[],
-    "rows": any[]
-  }
+    headers: string[];
+    rows: any[];
+  };
   constructor(props: any) {
     super(props);
     this.state = {
-      headers: ['Amount', 'DueDate', 'Name', 'Recurrence', 'SharedWith', 'Delete'],
+      headers: [
+        "Amount",
+        "DueDate",
+        "Name",
+        "Recurrence",
+        "SharedWith",
+        "Edit",
+        "Delete"
+      ],
       rows: []
-    }
+    };
   }
 
   /**
@@ -22,28 +30,27 @@ class List extends React.Component<{ uid: string }> {
    */
   private _removeRow = (key: string, i: number) => {
     if (window.confirm(`Delete item from list? This cannot be undone.`)) {
-
       let { rows } = this.state;
 
-      firebaseConfig.expensesRef(key).remove()
-        .catch((error) => console.warn(`Error removing entry`, error));
+      firebaseConfig
+        .expensesRef(key)
+        .remove()
+        .catch(error => console.warn(`Error removing entry`, error));
 
       let { uid } = this.props;
 
-      firebaseConfig.userExpensesRef(uid, key).remove()
+      firebaseConfig
+        .userExpensesRef(uid, key)
+        .remove()
         .then(() => {
           this.setState({
-            'rows': [
-              ...rows.slice(0, i),
-              ...rows.slice(i + 1)
-            ]
+            rows: [...rows.slice(0, i), ...rows.slice(i + 1)]
           });
           //console.log(`Deleted entry ${uid}/${key}`)
         })
-        .catch((error) => console.warn(`Error removing entry`, error));
-
+        .catch(error => console.warn(`Error removing entry`, error));
     }
-  }
+  };
 
   /**
    * componentDidMount
@@ -51,7 +58,7 @@ class List extends React.Component<{ uid: string }> {
   public componentDidMount() {
     let { uid } = this.props;
 
-    firebaseConfig.userExpensesRef(uid, '').on('value', snapshot => {
+    firebaseConfig.userExpensesRef(uid, "").on("value", snapshot => {
       const keys = Object.keys(snapshot!.val());
 
       let expenses = keys.map(key => snapshot!.val()[key]);
@@ -62,13 +69,18 @@ class List extends React.Component<{ uid: string }> {
         return {
           key: uid,
           values: [
-            ...Object.keys(expenses[rowId])
-              .map(key => expenses[rowId][key]),
+            ...Object.keys(expenses[rowId]).map(key => expenses[rowId][key]),
+
+            <Link className="btn-edit" to={`/expense-form/${uid}`}>
+              ✏️
+            </Link>,
 
             <button
               className="btn-delete"
               onClick={() => this._removeRow(uid, rowId)}
-            >x</button>
+            >
+              x
+            </button>
           ],
           editable: true,
           removable: true
@@ -76,7 +88,6 @@ class List extends React.Component<{ uid: string }> {
       });
 
       this.setState({ rows: dataRows });
-
     });
   }
 
@@ -84,10 +95,8 @@ class List extends React.Component<{ uid: string }> {
    * render
    */
   public render() {
-
     return (
-      <div className='list-wrapper'>
-
+      <div className="list-wrapper">
         <h3 className="flex-around">
           Expenses
           <Link to="/expense-form">Add new</Link>
@@ -95,11 +104,9 @@ class List extends React.Component<{ uid: string }> {
         </h3>
 
         <Excel headers={this.state.headers} data={this.state.rows} />
-
       </div>
-    )
+    );
   }
-
 }
 
 export default List;
