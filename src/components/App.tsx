@@ -10,14 +10,14 @@ import Register from "./Register";
 class App extends React.Component {
   state: IAuth;
   storedState: IAuth = JSON.parse(window.localStorage.getItem("authState")!);
-  loading: boolean = false;
 
   constructor(props: Object) {
     super(props);
     this.state = this.storedState || {
       email: "",
       password: "",
-      signedIn: false
+      signedIn: false,
+      loading: false
     };
   }
 
@@ -27,7 +27,9 @@ class App extends React.Component {
   private _login = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    this.loading = true;
+    this.setState({
+      loading: true
+    });
 
     firebaseConfig
       .auth()
@@ -45,7 +47,9 @@ class App extends React.Component {
         console.warn({ error });
       })
       .then(() => {
-        this.loading = false;
+        this.setState({
+          loading: false
+        })
       });
   };
 
@@ -118,6 +122,8 @@ class App extends React.Component {
       handleRegister: this._register
     };
 
+    const { loading } = this.state;
+
     return (
       <Router>
         <div className="full-width">
@@ -128,8 +134,8 @@ class App extends React.Component {
               this.state.signedIn ? (
                 <Redirect to="/expense-list" />
               ) : (
-                <Redirect to="/login" />
-              )
+                  <Redirect to="/login" />
+                )
             }
           />
 
@@ -139,8 +145,8 @@ class App extends React.Component {
               this.state.signedIn ? (
                 <Redirect to="/expense-list" />
               ) : (
-                <Login {...loginEventHandlers} loading={this.loading} />
-              )
+                  <Login {...loginEventHandlers} loading={loading} />
+                )
             }
           />
 

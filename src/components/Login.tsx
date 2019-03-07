@@ -35,8 +35,8 @@ const Login = ({ handleEmailChange, handlePasswordChange, handleLogin, loading }
       </label>
 
       {loading
-        ? <button className="btn login-btn pointer" disabled>Login</button>
-        : <button className="btn login-btn pointer">Login</button>
+        ? <button type="submit" className="btn login-btn pointer" disabled>Signing in...</button>
+        : <button type="submit" className="btn login-btn pointer">Sign in</button>
       }
 
       <hr />
