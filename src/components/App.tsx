@@ -122,7 +122,11 @@ class App extends React.Component {
       handleRegister: this._register
     };
 
-    const { loading } = this.state;
+    const {
+      loading = false,
+      signedIn = false,
+      uid = null
+    } = this.state;
 
     return (
       <Router>
@@ -131,7 +135,7 @@ class App extends React.Component {
             exact
             path="/"
             render={() =>
-              this.state.signedIn ? (
+              signedIn ? (
                 <Redirect to="/expense-list" />
               ) : (
                   <Redirect to="/login" />
@@ -142,7 +146,7 @@ class App extends React.Component {
           <Route
             path="/login"
             render={() =>
-              this.state.signedIn ? (
+              signedIn ? (
                 <Redirect to="/expense-list" />
               ) : (
                   <Login {...loginEventHandlers} loading={loading} />
@@ -157,13 +161,19 @@ class App extends React.Component {
 
           <Route
             path="/expense-list"
-            render={() => <List uid={this.state.uid} />}
+            render={() => (
+              signedIn
+                ? <List uid={uid} />
+                : <Redirect to="/login" />
+            )}
           />
 
           <Route
             path="/expense-form/:expenseId"
             render={({ match: { params } }) => (
-              <ExpenseForm uid={this.state.uid} expenseId={params.expenseId} />
+              signedIn
+                ? <ExpenseForm uid={uid} expenseId={params.expenseId} />
+                : <Redirect to="/login" />
             )}
           />
 
