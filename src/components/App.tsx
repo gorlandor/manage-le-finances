@@ -59,7 +59,8 @@ class App extends React.Component {
   private _register = (event: Event) => {
     event.preventDefault();
 
-    firebaseConfig
+    try {
+      firebaseConfig
       .auth()
       .createUserWithEmailAndPassword(this.state.email, this.state.password)
       .then(() => {
@@ -75,6 +76,10 @@ class App extends React.Component {
         console.warn({ error });
       })
       .then(() => console.log(this.state));
+    } catch (error) {
+      alert(error.message);
+    }
+
   };
 
   /**

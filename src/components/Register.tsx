@@ -35,8 +35,8 @@ const Register = ({ handleEmailChange, handlePasswordChange, handleRegister, loa
       </label>
 
       {loading
-        ? <button className="btn register-btn not-allowed" disabled>Register</button>
-        : <button className="btn register-btn pointer">Register</button>
+        ? <button type="submit" className="btn register-btn not-allowed" disabled>Registering...</button>
+        : <button type="submit" className="btn register-btn pointer">Register</button>
       }
 
       <hr />
