@@ -5,6 +5,9 @@
   padding: 2rem 0;
   text-align: left;
   font-size: 0.825rem;
+  @media only screen and (max-width: 425px) {
+    font-size: 0.625rem;
+  }
   &__header {
     th {
       color: var(--primary-color);
@@ -17,6 +20,9 @@
         color: black;
         font-size: 0.750rem;
         text-align: center;
+        @media only screen and (max-width: 425px) {
+          font-size: 0.625rem;
+        }
       }
     }
   }

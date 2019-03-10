@@ -1,16 +1,16 @@
+import { ApplicationStates } from "./AppStatus.interface";
+
 export interface IAuth {
   email: string;
-  password: string;
-  signedIn?: boolean;
-  registered?: boolean;
-  loading: boolean;
+  password?: string;  
+  status: ApplicationStates
   uid?: string
 }
 
 export interface IAuthManager {
-  handleEmailChange: Function;
-  handlePasswordChange: Function;
+  setStatus: Function;
+  handleInputChange: Function;
   handleLogin?: Function;
   handleRegister?: Function;
-  loading?: boolean;
+  status?: ApplicationStates;
 }

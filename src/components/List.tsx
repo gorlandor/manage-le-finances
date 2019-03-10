@@ -14,10 +14,11 @@ class List extends React.Component<{ uid: string }> {
     this.state = {
       headers: [
         "Amount",
-        "DueDate",
+        "Category",
+        "Due Date",
         "Name",
         "Recurrence",
-        "SharedWith",
+        "Shared With",
         "Edit",
         "Delete"
       ],
@@ -98,9 +99,10 @@ class List extends React.Component<{ uid: string }> {
     return (
       <div className="list-wrapper">
         <h3 className="flex-around">
-          Expenses
-          <Link to="/expense-form">Add new</Link>
-          <Link to="/logout">Logout</Link>
+          <Link className={"actionLink"} style={{flex: "2", textAlign: "center"}} to="/expense-list">Expenses</Link>
+          <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/expense-form">Add Expense</Link>
+          <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/category-form">Add Category</Link>
+          <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/logout">Logout</Link>
         </h3>
 
         <Excel headers={this.state.headers} data={this.state.rows} />

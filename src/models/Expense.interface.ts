@@ -11,6 +11,8 @@ export enum ExpenseRecurrence {
 
 export interface IExpense {
   amount: number,
+  category: string,
+  categories: string[],
   due_date: string,
   expense_title: string,
   recurrence: ExpenseRecurrence,

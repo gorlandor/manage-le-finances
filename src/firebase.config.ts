@@ -16,6 +16,9 @@ const version = "/v0";
 export const api = firebase.database().ref(version);
 
 // Database Refs
+export const categoriesRef = (categoryId: string = "") => {
+  return api.child(`category/${categoryId}`);
+};
 export const expensesRef = (expenseId: string = "") => {
   return api.child(`expenses/${expenseId}`);
 };

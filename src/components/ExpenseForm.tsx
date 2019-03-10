@@ -7,7 +7,7 @@ class ExpenseForm extends React.Component<{
   uid: string;
   expenseId: string | null;
 }> {
-  toList: boolean = false;
+  toList: boolean = false;  
   state: IExpense;
   baseState: IExpense;
 
@@ -15,6 +15,8 @@ class ExpenseForm extends React.Component<{
     super(props);
     this.state = {
       amount: 0,
+      category: "",
+      categories: [],
       due_date: "",
       expense_title: "",
       recurrence: ExpenseRecurrence.Once,
@@ -26,6 +28,14 @@ class ExpenseForm extends React.Component<{
 
   componentDidMount() {
     const { uid, expenseId } = this.props;
+
+    firebaseConfig.categoriesRef().on("value", snapshot => {
+      
+      this.setState({
+        categories: Object.keys(snapshot.val())
+      })
+
+    });
 
     if (expenseId) {
       firebaseConfig.userExpensesRef(uid, expenseId).on("value", snapshot => {
@@ -62,6 +72,7 @@ class ExpenseForm extends React.Component<{
 
     const {
       amount,
+      category,
       due_date,
       expense_title,
       recurrence,
@@ -74,6 +85,7 @@ class ExpenseForm extends React.Component<{
       const updates = {
         [`/expenses/${expenseId}`]: {
           amount,
+          category,
           due_date,
           expense_title,
           recurrence,
@@ -81,6 +93,7 @@ class ExpenseForm extends React.Component<{
         },
         [`/user-expenses/${uid}/${expenseId}`]: {
           amount,
+          category,
           due_date,
           expense_title,
           recurrence,
@@ -96,14 +109,14 @@ class ExpenseForm extends React.Component<{
       let transaction = firebaseConfig.expensesRef("").push();
 
       transaction
-        .set({ amount, due_date, expense_title, recurrence, shared_with })
+        .set({ amount, category, due_date, expense_title, recurrence, shared_with })
         .then(() => this.setState(this.baseState))
         .catch((err: Error) => console.warn({ err }));
 
       if (transaction !== undefined) {
         firebaseConfig
           .userExpensesRef(uid, transaction.key || "")
-          .set({ amount, due_date, expense_title, recurrence, shared_with });
+          .set({ amount, category, due_date, expense_title, recurrence, shared_with });
       }
     }
 
@@ -116,10 +129,11 @@ class ExpenseForm extends React.Component<{
 
     return (
       <React.Fragment>
-        <h3 className="flex-around">
-          Expenses
-          <Link to="/expense-list">View list</Link>
-          <Link to="/logout">Logout</Link>
+        <h3 className="flex-around">          
+          <Link className={"actionLink"} style={{flex: "2", textAlign: "center"}} to="/expense-form">Expenses</Link>
+          <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/expense-list">View list</Link>          
+          <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/category-form">Add Category</Link>
+          <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/logout">Logout</Link>
         </h3>
         <form
           className="login-form flex-container"
@@ -168,6 +182,21 @@ class ExpenseForm extends React.Component<{
               required
               value={this.state.due_date}
             />
+          </label>
+          <label className="form-label flex-vertically">
+            Category
+            <select
+              className="form-control"
+              name="category"
+              id="category"
+              onChange={this._onChange}
+              value={this.state.category}
+            >
+            <option value="">Choose Category</option>
+            {this.state.categories.map(category => (
+              <option value={category}>{category}</option>
+            ))}
+            </select>
           </label>
           <label className="form-label flex-vertically">
             Shared with?
