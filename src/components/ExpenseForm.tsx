@@ -41,6 +41,7 @@ class ExpenseForm extends React.Component<{
       firebaseConfig.userExpensesRef(uid, expenseId).on("value", snapshot => {
         const {
           amount,
+          category,
           due_date,
           expense_title,
           recurrence,
@@ -51,6 +52,7 @@ class ExpenseForm extends React.Component<{
 
         this.setState({
           amount: numericAmount,
+          category,
           due_date,
           expense_title,
           recurrence,
