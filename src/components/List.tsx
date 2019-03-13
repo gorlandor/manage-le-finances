@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import * as firebaseConfig from "../firebase.config";
 import { IDataRow } from "../models/DataTable.interface";
 import Excel from "./Excel";
+import ExpenseFiltersSection from "./ExpenseFilters";
 
 class List extends React.Component<{ uid: string }> {
   state: {
@@ -104,8 +105,9 @@ class List extends React.Component<{ uid: string }> {
           <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/category-form">Add Category</Link>
           <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/logout">Logout</Link>
         </h3>
-
-        <Excel headers={this.state.headers} data={this.state.rows} />
+        <ExpenseFiltersSection>
+          <Excel headers={this.state.headers} data={this.state.rows} />
+        </ExpenseFiltersSection>        
       </div>
     );
   }
