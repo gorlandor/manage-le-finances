@@ -1,3 +1,5 @@
+import { ExpenseRecurrence } from "./Expense.interface";
+
 export interface IDataRow {
   key: string,
   values: any[]
@@ -6,6 +8,8 @@ export interface IDataRow {
 };
 
 export interface IDataTableProps {
-  headers: string[],
-  data: IDataRow[]
+  headers: string[];
+  data: IDataRow[];
+  category?: string;
+  recurrence?: ExpenseRecurrence | string;
 };

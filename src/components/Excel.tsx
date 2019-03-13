@@ -25,13 +25,16 @@ class Excel extends React.Component<IDataTableProps> {
    */
   public render() {
     
-    let { headers, data } = this.props;
+    let { headers, data, category, recurrence } = this.props;
 
     let headerCells = headers.map((header, i, arr) => (
       <th key={`th--${i}`}>{header}</th>
     ));    
 
-    let rows = data.map((row, rowId, arr) => (
+    let rows = data.filter(row => {
+      return (category === "" || row.values[1] === category)
+        && (recurrence === null || recurrence === "" || row.values[4] === recurrence)
+    }).map((row, rowId, arr) => (
       <tr key={row.key}>
         {
           row.values.map((cell, cellId) => (
