@@ -179,7 +179,7 @@ class ExpenseForm extends React.Component<{
               type="date"
               id="due_date"
               name="due_date"
-              placeholder="Due Date"
+              placeholder="YYYY-MM-DD"
               onChange={this._onChange}
               required
               value={this.state.due_date}

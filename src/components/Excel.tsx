@@ -34,19 +34,27 @@ class Excel extends React.Component<IDataTableProps> {
     let rows = data.filter(row => {
       return (category === "" || row.values[1] === category)
         && (recurrence === null || recurrence === "" || row.values[4] === recurrence)
-    }).map((row, rowId, arr) => (
-      <tr key={row.key}>
-        {
-          row.values.map((cell, cellId) => (
-            <td key={cellId}>
+    }).map((row, rowId, arr) => {
+      const expenseDueDate = new Date(row.values[2]);
+      const currentDate = new Date(new Date().setHours(0,0,0,0))
+      const colourStyle = expenseDueDate > currentDate ? "blue"
+        : expenseDueDate < currentDate ? "rgb(173, 13, 76)"
+        : "black";
 
-              {cell}
-
-            </td>
-          ))
-        }
-      </tr>
-    ));
+      return (
+        <tr key={row.key}>
+          {
+            row.values.map((cell, cellId) => (
+              <td key={cellId} style={cellId === 2 ? {color: colourStyle} : {color: "black"}}>
+  
+                {cell}
+  
+              </td>
+            ))
+          }
+        </tr>
+      )
+    });
 
     return (
       <table className='table'>
