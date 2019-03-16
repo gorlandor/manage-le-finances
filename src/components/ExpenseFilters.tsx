@@ -1,5 +1,5 @@
 import * as React from "react";
-import { ExpenseRecurrence } from "../models/Expense.interface";
+import { ExpenseRecurrence, ExpenseTimeliness } from "../models/Expense.interface";
 import * as firebaseConfig from "../firebase.config";
 
 export default class ExpenseFiltersSection extends React.Component {
@@ -9,6 +9,7 @@ export default class ExpenseFiltersSection extends React.Component {
     dateFrom: string;
     dateTo: string;
     recurrence: ExpenseRecurrence;
+    timeliness: ExpenseTimeliness;
   };
 
   constructor(props: Object) {
@@ -19,7 +20,8 @@ export default class ExpenseFiltersSection extends React.Component {
       category: "",
       dateFrom: "",
       dateTo: "",
-      recurrence: null
+      recurrence: null,
+      timeliness: ExpenseTimeliness.Any
     };
   }
 
@@ -42,11 +44,11 @@ export default class ExpenseFiltersSection extends React.Component {
   };
 
   render() {
-    const { categories, category, dateFrom, dateTo, recurrence } = this.state;
+    const { categories, category, dateFrom, dateTo, recurrence, timeliness } = this.state;
     const { children } = this.props;
 
     const childrenWithProps = React.Children.map(children, child =>
-      React.cloneElement(child as React.ReactElement<any>, { category, recurrence })
+      React.cloneElement(child as React.ReactElement<any>, { category, recurrence, timeliness })
     );
     
     return (
@@ -57,6 +59,7 @@ export default class ExpenseFiltersSection extends React.Component {
           dateFrom={dateFrom}
           dateTo={dateTo}
           recurrence={recurrence}
+          timeliness={timeliness}
           onChange={this.handleChange}
         />
         {childrenWithProps}
@@ -71,6 +74,7 @@ function ExpenseFilters({
   dateFrom,
   dateTo,
   recurrence,
+  timeliness,
   onChange
 }: {
   categories: any[];
@@ -78,6 +82,7 @@ function ExpenseFilters({
   dateFrom: string;
   dateTo: string;
   recurrence: ExpenseRecurrence;
+  timeliness: ExpenseTimeliness;
   onChange: (
     event: React.ChangeEvent<HTMLSelectElement | HTMLInputElement>
   ) => void;
@@ -107,6 +112,22 @@ function ExpenseFilters({
               <option value={category}>{category}</option>
             ))}
           </select>
+        </label>
+
+        <label className="form-label flex-vertically">
+          Timeliness
+            <select
+              style={{ border: "1px solid #673AB7" }}
+              className="form-control"
+              name="timeliness"
+              id="timeliness"
+              onChange={onChange}
+              value={timeliness}
+            >
+              <option value={ExpenseTimeliness.Any}>Any</option>
+              <option value={ExpenseTimeliness.Overdue}>overdue</option>
+              <option value={ExpenseTimeliness.DueSoon}>due soon</option>
+            </select>
         </label>
 
         <label className="form-label flex-vertically">

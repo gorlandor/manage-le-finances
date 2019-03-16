@@ -1,4 +1,4 @@
-import { ExpenseRecurrence } from "./Expense.interface";
+import { ExpenseRecurrence, ExpenseTimeliness } from "./Expense.interface";
 
 export interface IDataRow {
   key: string,
@@ -12,4 +12,5 @@ export interface IDataTableProps {
   data: IDataRow[];
   category?: string;
   recurrence?: ExpenseRecurrence | string;
+  timeliness?: ExpenseTimeliness | string;
 };

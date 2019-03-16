@@ -1,5 +1,7 @@
+import { compareDesc, isFuture, isPast, isThisWeek, format } from 'date-fns';
 import * as React from 'react';
-import { IDataRow, IDataTableProps } from '../models/DataTable.interface';
+import { IDataTableProps } from '../models/DataTable.interface';
+import { ExpenseTimeliness } from '../models/Expense.interface';
 
 class Excel extends React.Component<IDataTableProps> {
   
@@ -25,20 +27,28 @@ class Excel extends React.Component<IDataTableProps> {
    */
   public render() {
     
-    let { headers, data, category, recurrence } = this.props;
+    let { headers, data, category, recurrence, timeliness } = this.props;
 
     let headerCells = headers.map((header, i, arr) => (
       <th key={`th--${i}`}>{header}</th>
     ));    
 
     let rows = data.filter(row => {
+      const expenseDueDate = new Date(row.values[2]);
+      
       return (category === "" || row.values[1] === category)
         && (recurrence === null || recurrence === "" || row.values[4] === recurrence)
-    }).map((row, rowId, arr) => {
-      const expenseDueDate = new Date(row.values[2]);
-      const currentDate = new Date(new Date().setHours(0,0,0,0))
-      const colourStyle = expenseDueDate > currentDate ? "blue"
-        : expenseDueDate < currentDate ? "rgb(173, 13, 76)"
+        && (timeliness === ExpenseTimeliness.Any 
+          || (timeliness === ExpenseTimeliness.DueSoon && isThisWeek(expenseDueDate))
+          || (timeliness === ExpenseTimeliness.Overdue && isPast(expenseDueDate)))
+
+    }).sort((a:any, b: any) => {
+      return compareDesc(a.values[2], b.values[2]);
+    })
+    .map((row, rowId, arr) => {
+      const expenseDueDate = new Date(row.values[2]);      
+      const colourStyle = isFuture(expenseDueDate) ? "blue"
+        : isPast(expenseDueDate) ? "rgb(173, 13, 76)"
         : "black";
 
       return (
@@ -47,7 +57,7 @@ class Excel extends React.Component<IDataTableProps> {
             row.values.map((cell, cellId) => (
               <td key={cellId} style={cellId === 2 ? {color: colourStyle} : {color: "black"}}>
   
-                {cell}
+                {cellId === 2 ? format(cell, "MMM Do, YYYY") : cell}
   
               </td>
             ))

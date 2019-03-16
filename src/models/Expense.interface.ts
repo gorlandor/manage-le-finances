@@ -9,6 +9,12 @@ export enum ExpenseRecurrence {
   Annually = "annually"  
 }
 
+export enum ExpenseTimeliness {
+  Any = "",
+  Overdue = "overdue",
+  DueSoon = "due_soon"
+}
+
 export interface IExpense {
   amount: number,
   category: string,
