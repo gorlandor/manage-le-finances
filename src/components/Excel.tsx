@@ -1,4 +1,4 @@
-import { compareDesc, isFuture, isPast, isThisWeek, format } from 'date-fns';
+import { compareDesc, isFuture, isPast, isThisWeek, format, isToday } from 'date-fns';
 import * as React from 'react';
 import { IDataTableProps } from '../models/DataTable.interface';
 import { ExpenseTimeliness } from '../models/Expense.interface';
@@ -33,31 +33,46 @@ class Excel extends React.Component<IDataTableProps> {
       <th key={`th--${i}`}>{header}</th>
     ));    
 
+    const columns = {
+      amount: 0,
+      amount_paid: 1,
+      category: 2,
+      due_date: 3,
+      recurrence: 5
+    }
+
     let rows = data.filter(row => {
-      const expenseDueDate = new Date(row.values[2]);
+      const expenseDueDate = new Date(row.values[columns.due_date]);
+
+      const paidOff = parseFloat(row.values[columns.amount]) - parseFloat(row.values[columns.amount_paid]) === 0;
       
-      return (category === "" || row.values[1] === category)
-        && (recurrence === null || recurrence === "" || row.values[4] === recurrence)
+      return (category === "" || row.values[columns.category] === category)
+        && (recurrence === null || recurrence === "" || row.values[columns.recurrence] === recurrence)
         && (timeliness === ExpenseTimeliness.Any 
           || (timeliness === ExpenseTimeliness.DueSoon && isThisWeek(expenseDueDate))
-          || (timeliness === ExpenseTimeliness.Overdue && isPast(expenseDueDate)))
-
-    }).sort((a:any, b: any) => {
-      return compareDesc(a.values[2], b.values[2]);
+          || (timeliness === ExpenseTimeliness.Overdue && isPast(expenseDueDate) && !paidOff));
     })
-    .map((row, rowId, arr) => {
-      const expenseDueDate = new Date(row.values[2]);      
+    .sort((a:any, b: any) => {
+      return compareDesc(a.values[columns.due_date], b.values[columns.due_date]);
+    })
+    .map(row => {
+      const expenseDueDate = new Date(row.values[columns.due_date]);      
+      
+      const paidOff = parseFloat(row.values[columns.amount]) - parseFloat(row.values[columns.amount_paid]) === 0;
+      
       const colourStyle = isFuture(expenseDueDate) ? "blue"
-        : isPast(expenseDueDate) ? "rgb(173, 13, 76)"
-        : "black";
+        : isToday(expenseDueDate) ? "black"
+        : isPast(expenseDueDate) && paidOff ? "#015a43" 
+        : "#ad0d4c";
 
       return (
         <tr key={row.key}>
           {
             row.values.map((cell, cellId) => (
-              <td key={cellId} style={cellId === 2 ? {color: colourStyle} : {color: "black"}}>
+              <td key={cellId} 
+                style={{color: (cellId === columns.due_date || cellId === columns.amount_paid) ? colourStyle : "black"}}>
   
-                {cellId === 2 ? format(cell, "MMM Do, YYYY") : cell}
+                {cellId === columns.due_date ? format(cell, "MMM Do, YYYY") : cell}
   
               </td>
             ))

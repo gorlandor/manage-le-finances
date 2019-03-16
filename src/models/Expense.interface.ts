@@ -16,12 +16,49 @@ export enum ExpenseTimeliness {
 }
 
 export interface IExpense {
-  amount: number,
-  category: string,
-  categories: string[],
-  due_date: string,
-  expense_title: string,
-  recurrence: ExpenseRecurrence,
-  shared_with: string,
-  loading: boolean
+  amount: number;
+  amount_paid: number;
+  amount_remaining: number;
+  category: string;
+  categories: string[];
+  due_date: string;
+  expense_title: string;
+  recurrence: ExpenseRecurrence;
+  shared_with: string;
+  loading: boolean;
 }
+
+export interface IExpenseFormProps {
+  email: string;
+  uid: string;
+  step: number;
+  expenseId: string | null;
+}
+
+export interface IExpenseWizardProps extends IExpense, IExpenseFormProps {
+  categories: string[];
+  history: any;
+  loading: boolean;
+  onAmountPaidChange?: (event: React.ChangeEvent<any>) => void;
+  onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
+  notifyChange: (
+    event: React.ChangeEvent<any>,
+    type: "number" | "text"
+  ) => void;
+  notifyPayoff?: (
+    event: React.ChangeEvent<any>,
+  ) => void;
+}
+
+export const ExpenseDefaultState = (email: string) => ({
+  amount: 0,
+  amount_paid: 0,
+  amount_remaining: 0,
+  category: "",
+  categories: [] as string[],
+  due_date: "",
+  expense_title: "",
+  recurrence: ExpenseRecurrence.Once,
+  shared_with: email,
+  loading: true
+});

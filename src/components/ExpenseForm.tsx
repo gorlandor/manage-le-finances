@@ -1,46 +1,34 @@
 import * as React from "react";
-import { Link, Redirect } from "react-router-dom";
+import {
+  Link,
+  Redirect,
+  Switch,
+  Route,
+  BrowserRouter as Router
+} from "react-router-dom";
 import * as firebaseConfig from "../firebase.config";
-import { ExpenseRecurrence, IExpense } from "../models/Expense.interface";
+import {
+  IExpense,
+  IExpenseFormProps,
+  ExpenseDefaultState,
+  ExpenseRecurrence
+} from "../models/Expense.interface";
+import { Step1 } from "./expense-form/Step1";
+import { Step2 } from "./expense-form/Step2";
 
-class ExpenseForm extends React.Component<{
-  uid: string;
-  expenseId: string | null;
-}> {
-  toList: boolean = false;  
-  state: IExpense;
-  baseState: IExpense;
-
-  constructor(props: any) {
-    super(props);
-    this.state = {
-      amount: 0,
-      category: "",
-      categories: [],
-      due_date: "",
-      expense_title: "",
-      recurrence: ExpenseRecurrence.Once,
-      shared_with: "myself",
-      loading: false
-    };
-    this.baseState = this.state;
-  }
+class ExpenseForm extends React.Component<IExpenseFormProps> {
+  toList: boolean = false;
+  state: IExpense = ExpenseDefaultState(this.props.email);
 
   componentDidMount() {
     const { uid, expenseId } = this.props;
-
-    firebaseConfig.categoriesRef().on("value", snapshot => {
-      
-      this.setState({
-        categories: Object.keys(snapshot.val())
-      })
-
-    });
 
     if (expenseId) {
       firebaseConfig.userExpensesRef(uid, expenseId).on("value", snapshot => {
         const {
           amount,
+          amount_paid,
+          amount_remaining,
           category,
           due_date,
           expense_title,
@@ -52,28 +40,80 @@ class ExpenseForm extends React.Component<{
 
         this.setState({
           amount: numericAmount,
+          amount_paid: parseFloat(amount_paid),
+          amount_remaining: parseFloat(amount_remaining),
           category,
           due_date,
           expense_title,
           recurrence,
-          shared_with
+          shared_with,
+          loading: false
+        });
+      });
+
+      firebaseConfig.categoriesRef().on("value", snapshot => {
+        this.setState({
+          categories: Object.keys(snapshot.val())
+        });
+      });
+    } else {
+      firebaseConfig.categoriesRef().on("value", snapshot => {
+        this.setState({
+          categories: Object.keys(snapshot.val()),
+          loading: false
         });
       });
     }
   }
 
-  _onChange = (event: React.ChangeEvent<any>) => {
+  _onPaidFull = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { amount } = this.state;
+    const { checked } = event.target;
+
+    if (checked) {
+      this.setState({
+        amount_paid: amount,
+        amount_remaining: 0
+      });
+    } else {
+      this.setState({
+        amount_paid: 0,
+        amount_remaining: amount
+      });
+    }
+  };
+
+  _onAmountPaidChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    this.setState({ [name]: value });
+
+    this.setState((prevState: IExpense) => {
+      return {
+        amount_remaining: prevState.amount - Number(value),
+        [name]: Number(value)
+      };
+    });
+  };
+
+  _onChange = (event: React.ChangeEvent<any>, type: "number" | "text") => {
+    const { name, value } = event.target;
+
+    if (type === "number") {
+      const numericValue = Number(value);
+      this.setState({ [name]: numericValue });
+    } else {
+      this.setState({ [name]: value });
+    }
   };
 
   _onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    const { uid, expenseId } = this.props;
+    const { email, uid, expenseId } = this.props;
 
     const {
       amount,
+      amount_paid,
+      amount_remaining,
       category,
       due_date,
       expense_title,
@@ -87,6 +127,8 @@ class ExpenseForm extends React.Component<{
       const updates = {
         [`/expenses/${expenseId}`]: {
           amount,
+          amount_paid,
+          amount_remaining,
           category,
           due_date,
           expense_title,
@@ -95,6 +137,8 @@ class ExpenseForm extends React.Component<{
         },
         [`/user-expenses/${uid}/${expenseId}`]: {
           amount,
+          amount_paid,
+          amount_remaining,
           category,
           due_date,
           expense_title,
@@ -105,20 +149,38 @@ class ExpenseForm extends React.Component<{
 
       firebaseConfig.api
         .update(updates)
-        .then(() => this.setState(this.baseState))
+        .then(() => this.setState(ExpenseDefaultState(email)))
         .catch((err: Error) => console.warn({ err }));
     } else {
       let transaction = firebaseConfig.expensesRef("").push();
 
       transaction
-        .set({ amount, category, due_date, expense_title, recurrence, shared_with })
-        .then(() => this.setState(this.baseState))
+        .set({
+          amount,
+          amount_paid,
+          amount_remaining,
+          category,
+          due_date,
+          expense_title,
+          recurrence,
+          shared_with
+        })
+        .then(() => this.setState(ExpenseDefaultState(email)))
         .catch((err: Error) => console.warn({ err }));
 
       if (transaction !== undefined) {
         firebaseConfig
           .userExpensesRef(uid, transaction.key || "")
-          .set({ amount, category, due_date, expense_title, recurrence, shared_with });
+          .set({
+            amount,
+            amount_paid,
+            amount_remaining,
+            category,
+            due_date,
+            expense_title,
+            recurrence,
+            shared_with
+          });
       }
     }
 
@@ -129,118 +191,105 @@ class ExpenseForm extends React.Component<{
       return <Redirect to="/expense-list" />;
     }
 
+    if (this.state.loading === true) {
+      return (
+        <React.Fragment>
+          <h3 className="flex-around">
+            <Link
+              className={"actionLink"}
+              style={{ flex: "2", textAlign: "center" }}
+              to="/expense-form/1"
+            >
+              Expenses
+            </Link>
+            <Link
+              className={"actionLink"}
+              style={{ flex: "1", textAlign: "center" }}
+              to="/expense-list"
+            >
+              View list
+            </Link>
+            <Link
+              className={"actionLink"}
+              style={{ flex: "1", textAlign: "center" }}
+              to="/category-form"
+            >
+              Add Category
+            </Link>
+            <Link
+              className={"actionLink"}
+              style={{ flex: "1", textAlign: "center" }}
+              to="/logout"
+            >
+              Logout
+            </Link>
+          </h3>
+          <div className="login-form flex-container">Loading...</div>
+        </React.Fragment>
+      );
+    }
+
     return (
       <React.Fragment>
-        <h3 className="flex-around">          
-          <Link className={"actionLink"} style={{flex: "2", textAlign: "center"}} to="/expense-form">Expenses</Link>
-          <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/expense-list">View list</Link>          
-          <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/category-form">Add Category</Link>
-          <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/logout">Logout</Link>
+        <h3 className="flex-around">
+          <Link
+            className={"actionLink"}
+            style={{ flex: "2", textAlign: "center" }}
+            to="/expense-form/1"
+          >
+            Expenses
+          </Link>
+          <Link
+            className={"actionLink"}
+            style={{ flex: "1", textAlign: "center" }}
+            to="/expense-list"
+          >
+            View list
+          </Link>
+          <Link
+            className={"actionLink"}
+            style={{ flex: "1", textAlign: "center" }}
+            to="/category-form"
+          >
+            Add Category
+          </Link>
+          <Link
+            className={"actionLink"}
+            style={{ flex: "1", textAlign: "center" }}
+            to="/logout"
+          >
+            Logout
+          </Link>
         </h3>
-        <form
-          className="login-form flex-container"
-          autoComplete="off"
-          onSubmit={this._onSubmit}
-        >
-          <label className="form-label flex-vertically">
-            Title
-            <input
-              className="form-control"
-              type="text"
-              id="expense_title"
-              name="expense_title"
-              placeholder="Expense Title"
-              onChange={this._onChange}
-              required
-              value={this.state.expense_title}
+        <Router>
+          <Switch>
+            <Route
+              path={"/expense-form/1/:expenseId?"}
+              render={({ history }) => (
+                <Step1
+                  history={history}
+                  notifyChange={this._onChange}
+                  notifyPayoff={this._onPaidFull}
+                  onAmountPaidChange={this._onAmountPaidChange}
+                  {...this.state}
+                  {...this.props}
+                />
+              )}
             />
-          </label>
-          <label className="form-label flex-vertically">
-            Amount
-            <input
-              className="form-control"
-              type="number"
-              step="0.01"
-              id="amount"
-              name="amount"
-              placeholder="Amount"
-              onChange={event => {
-                let amount: number = Number(event.target.value);
-                this.setState({ amount });
-              }}
-              required
-              value={this.state.amount}
+            <Route
+              path={"/expense-form/2/:expenseId?"}
+              render={() => (
+                <Step2
+                  history={history}
+                  notifyChange={this._onChange}
+                  onSubmit={this._onSubmit}
+                  {...this.state}
+                  {...this.props}
+                />
+              )}
             />
-          </label>
-          <label className="form-label flex-vertically">
-            Due Date
-            <input
-              className="form-control"
-              type="date"
-              id="due_date"
-              name="due_date"
-              placeholder="YYYY-MM-DD"
-              onChange={this._onChange}
-              required
-              value={this.state.due_date}
-            />
-          </label>
-          <label className="form-label flex-vertically">
-            Category
-            <select
-              className="form-control"
-              name="category"
-              id="category"
-              onChange={this._onChange}
-              value={this.state.category}
-            >
-            <option value="">Choose Category</option>
-            {this.state.categories.map(category => (
-              <option value={category}>{category}</option>
-            ))}
-            </select>
-          </label>
-          <label className="form-label flex-vertically">
-            Shared with?
-            <input
-              className="form-control"
-              type="text"
-              id="shared_with"
-              name="shared_with"
-              placeholder="Shared with..."
-              onChange={this._onChange}
-              required
-              value={this.state.shared_with}
-            />
-          </label>
-          <label className="form-label flex-vertically">
-            Recurrence
-            <select
-              className="form-control"
-              name="recurrence"
-              id="recurrence"
-              onChange={this._onChange}
-              value={this.state.recurrence}
-            >
-              <option value="once" selected>
-                once
-              </option>
-              <option value="daily">daily</option>
-              <option value="weekly">weekly</option>
-              <option value="monthly">monthly</option>
-              <option value="quarterly">quarterly</option>
-              <option value="semiannually">semiannually</option>
-              <option value="annually">annually</option>
-            </select>
-          </label>
-          {this.state.loading ? (
-            <button className="btn login-btn" disabled>
-              Submit
-            </button>
-          ) : (
-            <button className="btn login-btn">Submit</button>
-          )}
-        </form>
+          </Switch>
+        </Router>
       </React.Fragment>
     );
   }

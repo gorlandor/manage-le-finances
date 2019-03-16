@@ -14,12 +14,12 @@ class List extends React.Component<{ uid: string }> {
     super(props);
     this.state = {
       headers: [
-        "Amount",
+        "Amount Expense",
+        "Amount Paid",
         "Category",
         "Due Date",
         "Name",
-        "Recurrence",
-        "Shared With",
+        "Recurrence",        
         "Edit",
         "Delete"
       ],
@@ -58,7 +58,7 @@ class List extends React.Component<{ uid: string }> {
    * componentDidMount
    */
   public componentDidMount() {
-    let { uid } = this.props;
+    const { uid } = this.props;
 
     firebaseConfig.userExpensesRef(uid, "").on("value", snapshot => {
       const keys = Object.keys(snapshot!.val());
@@ -67,13 +67,15 @@ class List extends React.Component<{ uid: string }> {
 
       let dataRows: IDataRow[];
 
-      dataRows = keys.map((uid, rowId, arr) => {
+      const columnHeaders = ["amount", "amount_paid", "category", "due_date", "expense_title", "recurrence"];
+
+      dataRows = keys.map((uid, rowId, arr) => {                
         return {
           key: uid,
           values: [
-            ...Object.keys(expenses[rowId]).map(key => expenses[rowId][key]),
+            ...columnHeaders.map(key => expenses[rowId][key]),
 
-            <Link className="btn-edit" to={`/expense-form/${uid}`}>
+            <Link className="btn-edit" to={`/expense-form/1/${uid}`}>
               ✏️
             </Link>,
 
@@ -101,7 +103,7 @@ class List extends React.Component<{ uid: string }> {
       <div className="list-wrapper">
         <h3 className="flex-around">
           <Link className={"actionLink"} style={{flex: "2", textAlign: "center"}} to="/expense-list">Expenses</Link>
-          <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/expense-form">Add Expense</Link>
+          <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/expense-form/1">Add Expense</Link>
           <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/category-form">Add Category</Link>
           <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/logout">Logout</Link>
         </h3>

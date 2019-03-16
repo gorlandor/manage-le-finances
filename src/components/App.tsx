@@ -124,7 +124,8 @@ class App extends React.Component {
       }
     };
 
-    const {      
+    const {
+      email,      
       status = ApplicationStates.INITIAL,
       uid = null
     } = this.state;
@@ -168,10 +169,10 @@ class App extends React.Component {
           />
 
           <Route
-            path="/expense-form/:expenseId?"
+            path="/expense-form/:step/:expenseId?"
             render={({ match: { params } }) => {
               return uid
-              ? <ExpenseForm uid={uid} expenseId={params.expenseId} />
+              ? <ExpenseForm email={email} uid={uid} step={params.step} expenseId={params.expenseId} />
               : <Redirect to="/login" />
             }}
           />

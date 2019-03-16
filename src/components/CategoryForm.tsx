@@ -65,7 +65,7 @@ class CategoryForm extends React.Component<{
                 <h3 className="flex-around">                    
                     <Link className={"actionLink"} style={{flex: "2", textAlign: "center"}} to="/category-form">Categories</Link>
                     <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/expense-list">View list</Link>
-                    <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/expense-form">Add Expense</Link>
+                    <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/expense-form/1">Add Expense</Link>
                     <Link className={"actionLink"} style={{flex: "1", textAlign: "center"}} to="/logout">Logout</Link>
                 </h3>
                 <form
