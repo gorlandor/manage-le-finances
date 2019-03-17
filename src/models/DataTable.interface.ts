@@ -11,6 +11,6 @@ export interface IDataTableProps {
   headers: string[];
   data: IDataRow[];
   category?: string;
-  recurrence?: ExpenseRecurrence | string;
-  timeliness?: ExpenseTimeliness | string;
+  recurrence?: ExpenseRecurrence;
+  timeliness?: ExpenseTimeliness;
 };

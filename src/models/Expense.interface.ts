@@ -1,4 +1,5 @@
 export enum ExpenseRecurrence {
+  Any = "",
   Once = "once",
   Daily = "daily",
   Weekly = "weekly",
@@ -39,6 +40,7 @@ export interface IExpenseWizardProps extends IExpense, IExpenseFormProps {
   categories: string[];
   history: any;
   loading: boolean;
+  onAmountDueChange?: (event: React.ChangeEvent<any>) => void;
   onAmountPaidChange?: (event: React.ChangeEvent<any>) => void;
   onSubmit?: (event: React.FormEvent<HTMLFormElement>) => void;
   notifyChange: (
@@ -50,7 +52,7 @@ export interface IExpenseWizardProps extends IExpense, IExpenseFormProps {
   ) => void;
 }
 
-export const ExpenseDefaultState = (email: string) => ({
+export const ExpenseInitialState = (email: string) => ({
   amount: 0,
   amount_paid: 0,
   amount_remaining: 0,

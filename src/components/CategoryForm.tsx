@@ -1,18 +1,7 @@
 import * as React from "react";
 import { Link } from "react-router-dom";
 import * as firebaseConfig from "../firebase.config";
-
-enum CategoryStates {
-    INITIAL = "",
-    CATEGORY_SUBMIT_STARTED = "CATEGORY_SUBMIT_STARTED",
-    CATEGORY_SUBMIT_COMPLETE = "CATEGORY_SUBMIT_COMPLETE",
-    CATEGORY_SUBMIT_FAILED = "CATEGORY_SUBMIT_FAILED"
-}
-
-interface ICategoryForm {
-    category_name: string;
-    status: CategoryStates;
-}
+import { CategoryStates, ICategoryForm } from "../models/Category.interface";
 
 const initialState = {
     category_name: "",

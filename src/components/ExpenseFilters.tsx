@@ -140,14 +140,14 @@ function ExpenseFilters({
             onChange={onChange}
             value={recurrence}
           >
-            <option value="">Any</option>
-            <option value="once">once</option>
-            <option value="daily">daily</option>
-            <option value="weekly">weekly</option>
-            <option value="monthly">monthly</option>
-            <option value="quarterly">quarterly</option>
-            <option value="semiannually">semiannually</option>
-            <option value="annually">annually</option>
+            <option value={ExpenseRecurrence.Any} selected>Any</option>
+            <option value={ExpenseRecurrence.Once}>once</option>
+            <option value={ExpenseRecurrence.Daily}>daily</option>
+            <option value={ExpenseRecurrence.Weekly}>weekly</option>
+            <option value={ExpenseRecurrence.Monthly}>monthly</option>
+            <option value={ExpenseRecurrence.Quarterly}>quarterly</option>
+            <option value={ExpenseRecurrence.Semiannually}>semiannually</option>
+            <option value={ExpenseRecurrence.Annually}>annually</option>
           </select>
         </label>
       </div>

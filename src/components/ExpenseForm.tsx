@@ -1,24 +1,13 @@
 import * as React from "react";
-import {
-  Link,
-  Redirect,
-  Switch,
-  Route,
-  BrowserRouter as Router
-} from "react-router-dom";
+import { BrowserRouter as Router, Link, Redirect, Route, Switch } from "react-router-dom";
 import * as firebaseConfig from "../firebase.config";
-import {
-  IExpense,
-  IExpenseFormProps,
-  ExpenseDefaultState,
-  ExpenseRecurrence
-} from "../models/Expense.interface";
+import { ExpenseInitialState, IExpense, IExpenseFormProps } from "../models/Expense.interface";
 import { Step1 } from "./expense-form/Step1";
 import { Step2 } from "./expense-form/Step2";
 
 class ExpenseForm extends React.Component<IExpenseFormProps> {
   toList: boolean = false;
-  state: IExpense = ExpenseDefaultState(this.props.email);
+  state: IExpense = ExpenseInitialState(this.props.email);
 
   componentDidMount() {
     const { uid, expenseId } = this.props;
@@ -81,6 +70,17 @@ class ExpenseForm extends React.Component<IExpenseFormProps> {
         amount_remaining: amount
       });
     }
+  };
+
+  _onAmountDueChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    this.setState((prevState: IExpense) => {
+      return {
+        amount_remaining: Number(value) - prevState.amount_paid,
+        [name]: Number(value)
+      };
+    });
   };
 
   _onAmountPaidChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -149,7 +149,7 @@ class ExpenseForm extends React.Component<IExpenseFormProps> {
 
       firebaseConfig.api
         .update(updates)
-        .then(() => this.setState(ExpenseDefaultState(email)))
+        .then(() => this.setState(ExpenseInitialState(email)))
         .catch((err: Error) => console.warn({ err }));
     } else {
       let transaction = firebaseConfig.expensesRef("").push();
@@ -165,7 +165,7 @@ class ExpenseForm extends React.Component<IExpenseFormProps> {
           recurrence,
           shared_with
         })
-        .then(() => this.setState(ExpenseDefaultState(email)))
+        .then(() => this.setState(ExpenseInitialState(email)))
         .catch((err: Error) => console.warn({ err }));
 
       if (transaction !== undefined) {
@@ -270,6 +270,7 @@ class ExpenseForm extends React.Component<IExpenseFormProps> {
                   history={history}
                   notifyChange={this._onChange}
                   notifyPayoff={this._onPaidFull}
+                  onAmountDueChange={this._onAmountDueChange}
                   onAmountPaidChange={this._onAmountPaidChange}
                   {...this.state}
                   {...this.props}

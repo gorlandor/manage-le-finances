@@ -14,8 +14,8 @@ export function Step1({
   recurrence,
   categories,
   expenseId = "",
-  history,
-  loading,
+  history,  
+  onAmountDueChange,
   onAmountPaidChange,
   notifyChange,
   notifyPayoff
@@ -62,7 +62,7 @@ export function Step1({
             id="amount"
             name="amount"
             placeholder="Amount"
-            onChange={event => notifyChange(event, "number")}
+            onChange={event => onAmountDueChange(event)}
             required
             value={amount}
           />
@@ -76,7 +76,7 @@ export function Step1({
               type="checkbox"
               name="paid_full"
               id="paid_full"
-              defaultChecked={amount - amount_paid === 0}
+              defaultChecked={amount_remaining === 0}
               onChange={event => notifyPayoff(event)}
             />
           <br />
