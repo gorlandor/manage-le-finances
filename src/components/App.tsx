@@ -172,7 +172,7 @@ class App extends React.Component {
             path="/expense-form/:step/:expenseId?"
             render={({ match: { params } }) => {
               return uid
-              ? <ExpenseForm email={email} uid={uid} step={params.step} expenseId={params.expenseId} />
+              ? <ExpenseForm email={email} uid={uid} step={Number(params.step)} expenseId={params.expenseId} />
               : <Redirect to="/login" />
             }}
           />

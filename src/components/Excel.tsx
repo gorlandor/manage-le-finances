@@ -1,4 +1,4 @@
-import { compareDesc, isFuture, isPast, isThisWeek, format, isToday } from 'date-fns';
+import { compareDesc, isFuture, isPast, isThisWeek, format, isToday, parseISO } from 'date-fns';
 import * as React from 'react';
 import { IDataTableProps } from '../models/DataTable.interface';
 import { ExpenseTimeliness } from '../models/Expense.interface';
@@ -53,7 +53,9 @@ class Excel extends React.Component<IDataTableProps> {
           || (timeliness === ExpenseTimeliness.Overdue && isPast(expenseDueDate) && !paidOff));
     })
     .sort((a:any, b: any) => {
-      return compareDesc(a.values[columns.due_date], b.values[columns.due_date]);
+      const leftHandSide = parseISO(a.values[columns.due_date]);
+      const rightHandSide = parseISO(b.values[columns.due_date])
+      return compareDesc(leftHandSide, rightHandSide);
     })
     .map(row => {
       const expenseDueDate = new Date(row.values[columns.due_date]);      
@@ -64,7 +66,7 @@ class Excel extends React.Component<IDataTableProps> {
         : isToday(expenseDueDate) ? "black"
         : isPast(expenseDueDate) && paidOff ? "#015a43" 
         : "#ad0d4c";
-
+      
       return (
         <tr key={row.key}>
           {
@@ -72,7 +74,7 @@ class Excel extends React.Component<IDataTableProps> {
               <td key={cellId} 
                 style={{color: (cellId === columns.due_date || cellId === columns.amount_paid) ? colourStyle : "black"}}>
   
-                {cellId === columns.due_date ? format(cell, "MMM Do, YYYY") : cell}
+                {cellId === columns.due_date ? format(parseISO(cell), "MMM do, yyyy") : cell}
   
               </td>
             ))

@@ -1,7 +1,7 @@
 import * as React from "react";
 import { ExpenseRecurrence, ExpenseTimeliness } from "../models/Expense.interface";
 import * as firebaseConfig from "../firebase.config";
-
+import { v4 as uuidv4 } from 'uuid';
 export default class ExpenseFiltersSection extends React.Component {
   state: {
     categories: any[];
@@ -26,7 +26,7 @@ export default class ExpenseFiltersSection extends React.Component {
   }
 
   componentDidMount() {
-    firebaseConfig.categoriesRef().on("value", snapshot => {
+    firebaseConfig.categoriesRef().on("value", (snapshot:any) => {
       this.setState({
         categories: Object.keys(snapshot.val())
       });
@@ -105,11 +105,11 @@ function ExpenseFilters({
             name="category"
             id="category"
             onChange={onChange}
-            value={category}
+            value={category ?? ""}
           >
             <option value="">Any</option>
-            {categories.map(category => (
-              <option value={category}>{category}</option>
+            {categories.map((category, i) => (
+              <option key={uuidv4()} value={category}>{category}</option>
             ))}
           </select>
         </label>
@@ -122,7 +122,7 @@ function ExpenseFilters({
               name="timeliness"
               id="timeliness"
               onChange={onChange}
-              value={timeliness}
+              value={timeliness ?? ExpenseTimeliness.Any}
             >
               <option value={ExpenseTimeliness.Any}>Any</option>
               <option value={ExpenseTimeliness.Overdue}>overdue</option>
@@ -138,9 +138,9 @@ function ExpenseFilters({
             name="recurrence"
             id="recurrence"
             onChange={onChange}
-            value={recurrence}
+            value={recurrence ?? ExpenseRecurrence.Any}
           >
-            <option value={ExpenseRecurrence.Any} selected>Any</option>
+            <option value={ExpenseRecurrence.Any}>Any</option>
             <option value={ExpenseRecurrence.Once}>once</option>
             <option value={ExpenseRecurrence.Daily}>daily</option>
             <option value={ExpenseRecurrence.Weekly}>weekly</option>
