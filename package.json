@@ -31,7 +31,7 @@
     "date-fns": "^2.21.3",
     "express": "^4.17.1",
     "firebase": "^8.6.2",
-    "firebase-tools": "^9.11.0",
+    "firebase-tools": "^9.23.3",
     "prop-types": "^15.7.2",
     "react": "^17.0.2",
     "react-cookie": "^4.0.3",
